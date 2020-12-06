@@ -7,35 +7,10 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {Overlay, ListItem, Avatar} from 'react-native-elements';
-import axios from '../../services/axios';
-import AsyncStorage from '@react-native-community/async-storage';
-import jwt_decode from 'jwt-decode';
 
 export default function OverlayCompanies(props) {
   const [visible, setVisible] = useState(false);
-  const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (visible) {
-      const getUserCompanies = async () => {
-        const token = await AsyncStorage.getItem('access_token');
-        var decodedToken = jwt_decode(token);
-        setLoading(true);
-        axios
-          .get(`user/${decodedToken.id}`)
-          .then((res) => {
-            setCompanies(res.data.companies);
-            setLoading(false);
-          })
-          .catch(() => {
-            setLoading(false);
-          });
-      };
-
-      getUserCompanies();
-    }
-  }, [visible]);
 
   useEffect(() => {
     setVisible(props.visible);
@@ -80,7 +55,7 @@ export default function OverlayCompanies(props) {
               <Text style={styles.titleText}>Selecione o Estaciomanento</Text>
             </View>
             <FlatList
-              data={companies}
+              data={props.companies}
               renderItem={itemList}
               keyExtractor={(item) => item.id.toString()}
             />

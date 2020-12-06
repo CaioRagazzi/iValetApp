@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import jwt_decode from 'jwt-decode';
 
 import {AuthContext} from '../../contexts/auth';
-import {showWarning} from '../../components/toast';
+import {showWarning, showError} from '../../components/toast';
 import {validateEmail} from '../../utils/utilsFunctions';
 import {InputEmail} from '../../components/inputEmail';
 import {InputPassword} from '../../components/inputPassword';
@@ -35,6 +35,7 @@ function LoginScreen(props) {
   const [password, setPassword] = useState('');
   const [inputEmailErrorMessage, setInputEmailErrorMessage] = useState('');
   const [inputEmailErr, setInputEmailErr] = useState(false);
+  const [companies, setCompanies] = useState([]);
 
   useEffect(() => {
     if (error) {
@@ -44,15 +45,21 @@ function LoginScreen(props) {
 
   useEffect(() => {
     const handleLoginCompany = async (userId) => {
-      await axios.get(`user/${userId}`).then(async (res) => {
-        if (res.data.companies.length > 1) {
-          setOverlayVisible(true);
-        } else {
-          setType(1);
-          setLogged(true);
-          setCompanyId(res.data.companies[0].id);
-        }
-      });
+      await axios
+        .get(`user/${userId}`)
+        .then(async (res) => {
+          if (res.data.companies.length > 1) {
+            setCompanies(res.data.companies);
+            setOverlayVisible(true);
+          } else {
+            setType(1);
+            setLogged(true);
+            setCompanyId(res.data.companies[0].id);
+          }
+        })
+        .catch(() => {
+          showError('Erro ao efetuar login!');
+        });
     };
     if (authenticated) {
       const getToken = async () => {
@@ -159,6 +166,7 @@ function LoginScreen(props) {
       </View>
       <OverlayCompanies
         visible={overlayVisible}
+        companies={companies}
         onPress={handleSelectedCompany}
         onClose={() => closeOverlay()}
       />
