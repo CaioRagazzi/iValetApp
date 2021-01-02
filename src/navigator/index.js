@@ -1,20 +1,20 @@
 import React, {useContext} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-
+import {observer} from 'mobx-react-lite';
 import LoginNavigator from './loginNavigator';
 import HomeCompanyNavigator from './homeCompanyNavigator';
 import HomeClientNavigator from './homeClientNavigator';
 import SplashScreenNavigator from './splashNavigator';
-import {AuthContext} from '../contexts/auth';
+import {StoreContext} from '../store/rootStore';
 
-function Navigator() {
-  const {type, logged, splash} = useContext(AuthContext);
+const Navigator = () => {
+  const rootContext = useContext(StoreContext);
 
   const getNavigator = () => {
-    if (logged && type === 1) {
+    if (rootContext.authStore.logged && rootContext.authStore.type === 1) {
       return <HomeCompanyNavigator />;
     }
-    if (logged && type === 2) {
+    if (rootContext.authStore.logged && rootContext.authStore.type === 2) {
       return <HomeClientNavigator />;
     }
     return <LoginNavigator />;
@@ -22,9 +22,13 @@ function Navigator() {
 
   return (
     <NavigationContainer>
-      {splash ? <SplashScreenNavigator /> : getNavigator()}
+      {rootContext.authStore.splash ? (
+        <SplashScreenNavigator />
+      ) : (
+        getNavigator()
+      )}
     </NavigationContainer>
   );
-}
+};
 
-export default Navigator;
+export default observer(Navigator);

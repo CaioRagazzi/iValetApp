@@ -4,44 +4,45 @@ import AsyncStorage from '@react-native-community/async-storage';
 import jwt_decode from 'jwt-decode';
 import axios from '../../services/axios';
 
-import {AuthContext} from '../../contexts/auth';
+import {StoreContext} from '../../store/rootStore';
+import {observer} from 'mobx-react-lite';
 
-export default function LoadingScreen() {
-  const {setLogged, setType, setSplash, setCompanyId, setToken} = useContext(
-    AuthContext,
-  );
+const LoadingScreen = () => {
+  const {authStore} = useContext(StoreContext);
+
   useEffect(() => {
     setTimeout(() => {
       const getToken = async () => {
         const token = await AsyncStorage.getItem('access_token');
         if (!token) {
-          setType(0);
-          setLogged(false);
+          authStore.setNotLoggedIn();
         } else {
-          setToken(token);
+          authStore.setToken(token);
           var decodedToken = jwt_decode(token);
           if (decodedToken.idPerfil === 1) {
             await axios
               .get(`user/${decodedToken.id}`)
               .then((res) => {
-                setType(1);
-                setLogged(true);
-                setCompanyId(res.data.company[0].id);
+                const companyId = res.data.company[0].id;
+                authStore.setLoggedIn(1, companyId);
               })
               .catch(() => {
-                setType(0);
-                setLogged(false);
+                authStore.setNotLoggedIn();
               });
           } else {
-            setType(2);
-            setLogged(true);
+            authStore.setLoggedIn(2);
           }
         }
-        setSplash(false);
       };
       getToken();
     }, 2500);
-  }, [setLogged, setSplash, setType, setCompanyId, setToken]);
+  }, [
+    authStore.logged,
+    authStore.splash,
+    authStore.type,
+    authStore.token,
+    authStore,
+  ]);
 
   return (
     <View style={styles.viewContainer}>
@@ -52,7 +53,7 @@ export default function LoadingScreen() {
       </ScrollView>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   viewContainer: {
@@ -63,3 +64,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+export default observer(LoadingScreen);

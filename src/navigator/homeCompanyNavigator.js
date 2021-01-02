@@ -31,18 +31,13 @@ const Drawer = createDrawerNavigator();
 
 function HomeCompanyNavigator() {
   return (
-    <CaixaProvider>
-      <Drawer.Navigator
-        drawerContent={(props) => <CustomDrawerContent {...props} />}>
-        <Drawer.Screen name="Home" component={HomeTabNavigator} />
-        <Drawer.Screen name="Prices" component={PricesStackNavigator} />
-        <Drawer.Screen name="Caixa" component={CaixaStackNavigator} />
-        <Drawer.Screen
-          name="Mensalistas"
-          component={MensalistasStackNavigator}
-        />
-      </Drawer.Navigator>
-    </CaixaProvider>
+    <Drawer.Navigator
+      drawerContent={(props) => <CustomDrawerContent {...props} />}>
+      <Drawer.Screen name="Home" component={HomeTabNavigator} />
+      <Drawer.Screen name="Prices" component={PricesStackNavigator} />
+      <Drawer.Screen name="Caixa" component={CaixaStackNavigator} />
+      <Drawer.Screen name="Mensalistas" component={MensalistasStackNavigator} />
+    </Drawer.Navigator>
   );
 }
 

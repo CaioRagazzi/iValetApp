@@ -24,6 +24,8 @@
     "jwt-decode": "^3.0.0-beta.2",
     "lottie-ios": "^3.1.8",
     "lottie-react-native": "^3.5.0",
+    "mobx": "^6.0.4",
+    "mobx-react-lite": "^3.1.6",
     "native-base": "^2.13.14",
     "react": "16.13.1",
     "react-native": "0.63.2",
@@ -39,6 +41,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
+    "@babel/plugin-proposal-decorators": "^7.12.12",
     "@babel/runtime": "^7.8.4",
     "@react-native-community/eslint-config": "^1.1.0",
     "babel-jest": "^25.1.0",

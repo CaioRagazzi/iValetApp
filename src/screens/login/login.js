@@ -10,7 +10,7 @@ import {Button} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 import jwt_decode from 'jwt-decode';
 
-import {AuthContext} from '../../contexts/auth';
+import {StoreContext} from '../../store/rootStore';
 import {showWarning, showError} from '../../components/toast';
 import {validateEmail} from '../../utils/utilsFunctions';
 import {InputEmail} from '../../components/inputEmail';
@@ -18,18 +18,10 @@ import {InputPassword} from '../../components/inputPassword';
 import OverlayCompanies from '../../components/overlayCompanies/index';
 import BaseLayout from './baseLayout';
 import axios from '../../services/axios';
+import {observer} from 'mobx-react-lite';
 
-function LoginScreen(props) {
-  const {
-    error,
-    logIn,
-    loading,
-    authenticated,
-    setLogged,
-    setType,
-    setCompanyId,
-    logOut,
-  } = useContext(AuthContext);
+const LoginScreen = ({navigation}) => {
+  const {authStore} = useContext(StoreContext);
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -38,10 +30,10 @@ function LoginScreen(props) {
   const [companies, setCompanies] = useState([]);
 
   useEffect(() => {
-    if (error) {
+    if (authStore.error) {
       showWarning('Login e ou senha inválidos');
     }
-  }, [error]);
+  }, [authStore.error]);
 
   useEffect(() => {
     const handleLoginCompany = async (userId) => {
@@ -52,29 +44,33 @@ function LoginScreen(props) {
             setCompanies(res.data.companies);
             setOverlayVisible(true);
           } else {
-            setType(1);
-            setLogged(true);
-            setCompanyId(res.data.companies[0].id);
+            const companyId = res.data.companies[0].id;
+            authStore.setLoggedIn(1, companyId);
           }
         })
         .catch(() => {
           showError('Erro ao efetuar login!');
         });
     };
-    if (authenticated) {
+    if (authStore.authenticated) {
       const getToken = async () => {
         const token = await AsyncStorage.getItem('access_token');
         var decodedToken = jwt_decode(token);
         if (decodedToken.idPerfil === 1) {
           handleLoginCompany(decodedToken.id);
         } else {
-          setType(2);
-          setLogged(true);
+          authStore.setLoggedIn(2);
         }
       };
       getToken();
     }
-  }, [authenticated, props.navigation, setType, setLogged, setCompanyId]);
+  }, [
+    authStore.authenticated,
+    navigation,
+    authStore.type,
+    authStore.logged,
+    authStore,
+  ]);
 
   useEffect(() => {
     if (!validateEmail(username) && username !== '') {
@@ -89,7 +85,7 @@ function LoginScreen(props) {
 
     if (isOk) {
       Keyboard.dismiss();
-      logIn(username, password);
+      authStore.logIn(username, password);
     }
   };
 
@@ -102,11 +98,11 @@ function LoginScreen(props) {
   };
 
   const goToCadastro = () => {
-    props.navigation.navigate('SelectType');
+    navigation.navigate('SelectType');
   };
 
   const goToForgotPassword = () => {
-    props.navigation.navigate('ForgotPassword');
+    navigation.navigate('ForgotPassword');
   };
 
   const checkEnabledButton = () => {
@@ -123,14 +119,12 @@ function LoginScreen(props) {
 
   const handleSelectedCompany = async (value) => {
     setOverlayVisible(false);
-    setType(1);
-    setLogged(true);
-    setCompanyId(value.id);
+    authStore.setLoggedIn(1, value.id);
   };
 
   const closeOverlay = () => {
     setOverlayVisible(false);
-    logOut();
+    authStore.logOut();
   };
 
   return (
@@ -149,7 +143,7 @@ function LoginScreen(props) {
         containerStyle={styles.button}
         title="Login"
         onPress={() => handleLogin()}
-        loading={loading}
+        loading={authStore.loading}
         disabled={checkEnabledButton()}
         raised
       />
@@ -172,7 +166,7 @@ function LoginScreen(props) {
       />
     </BaseLayout>
   );
-}
+};
 
 const styles = StyleSheet.create({
   forgotPasswordContainer: {
@@ -201,4 +195,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default observer(LoginScreen);

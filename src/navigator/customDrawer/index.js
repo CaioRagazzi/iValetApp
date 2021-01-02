@@ -5,10 +5,10 @@ import {
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
-import {AuthContext} from '../../contexts/auth';
+import {StoreContext} from '../../store/rootStore';
 
 export default function CustomDrawerContent(props) {
-  const {logOut} = useContext(AuthContext);
+  const {authStore} = useContext(StoreContext);
   const [focusedDrawerItem, setFocusedDrawerItem] = useState();
 
   const onDrawerPress = (item) => {
@@ -46,7 +46,7 @@ export default function CustomDrawerContent(props) {
         focused={focusedDrawerItem === 'Mensalistas'}
         onPress={() => onDrawerPress('Mensalistas')}
       />
-      <DrawerItem label="Logout" onPress={() => logOut()} />
+      <DrawerItem label="Logout" onPress={() => authStore.logOut()} />
     </DrawerContentScrollView>
   );
 }
