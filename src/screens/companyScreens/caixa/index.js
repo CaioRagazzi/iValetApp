@@ -13,19 +13,12 @@ import OpenDrawerIcon from '../../../components/openDrawerIcon';
 import {Card} from 'react-native-elements';
 import IconFontisto from 'react-native-vector-icons/Fontisto';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
-import {CaixaContext} from '../../../contexts/caixa';
 import {StoreContext} from '../../../store/rootStore';
 import Orientation from 'react-native-orientation';
 import axios from '../../../services/axios';
-import {AuthContext} from '../../../contexts/auth';
 import {observer} from 'mobx-react-lite';
 
 const CaixaScreen = ({navigation}) => {
-  // const {loading, isCaixaOpened, openCloseCaixa, setLoading} = useContext(
-  //   CaixaContext,
-  // );
-  // const {companyId} = useContext(AuthContext);
-
   const {authStore, caixaStore} = useContext(StoreContext);
 
   const [orientation, setOrientation] = useState(
@@ -93,7 +86,7 @@ const CaixaScreen = ({navigation}) => {
       caixaStore.setLoading(true);
       axios.get(`transaction/opened/${authStore.companyId}`).then((res) => {
         console.log(res.data);
-        if (res.data === 0) {
+        if (res.data.length === 0) {
           caixaStore.openCloseCaixa();
         } else {
           Alert.alert(

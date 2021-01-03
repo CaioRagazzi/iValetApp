@@ -1,16 +1,13 @@
-import React, {useEffect, useContext, useState, useCallback} from 'react';
+import React, {useEffect, useContext} from 'react';
 import {View, FlatList} from 'react-native';
 import {ListItem} from 'react-native-elements';
-import axios from '../../../services/axios';
-import {AuthContext} from '../../../contexts/auth';
-import {showError} from '../../../components/toast';
+import {StoreContext} from '../../../store/rootStore';
 import HeaderPlusIcon from '../../../components/HeaderPlusIcon';
 import {HeaderBackButton} from '@react-navigation/stack';
+import {observer} from 'mobx-react-lite';
 
-export default function MonthlyPrices({navigation}) {
-  const {companyId} = useContext(AuthContext);
-  const [prices, setPrices] = useState([]);
-  const [loading, setLoading] = useState(false);
+const MonthlyPrices = ({navigation}) => {
+  const {monthlyStore} = useContext(StoreContext);
 
   useEffect(() => {
     navigation.setOptions({
@@ -29,22 +26,8 @@ export default function MonthlyPrices({navigation}) {
         />
       ),
     });
-    getPrices();
-  }, [getPrices, navigation]);
-
-  const getPrices = useCallback(async () => {
-    setLoading(true);
-    await axios
-      .get(`monthlyPrices/${companyId}`)
-      .then((res) => {
-        setPrices(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-        showError('Erro ao carregar tabelas de preços!');
-      });
-  }, [companyId]);
+    monthlyStore.getPrices();
+  }, [monthlyStore, navigation]);
 
   const renderItem = ({item}) => {
     return (
@@ -65,12 +48,14 @@ export default function MonthlyPrices({navigation}) {
   return (
     <View>
       <FlatList
-        data={prices}
+        data={monthlyStore.prices}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
-        refreshing={loading}
-        onRefresh={() => getPrices()}
+        refreshing={monthlyStore.loading}
+        onRefresh={() => monthlyStore.getPrices()}
       />
     </View>
   );
-}
+};
+
+export default observer(MonthlyPrices);

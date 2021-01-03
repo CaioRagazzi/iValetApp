@@ -1,19 +1,10 @@
 import React, {useContext} from 'react';
-import {PriceContext} from '../../../contexts/price';
 import InputTimer from './InputTimer';
-import {showWarning} from '../../toast';
 import {StoreContext} from '../../../store/rootStore';
 import {observer} from 'mobx-react-lite';
 
 const InputTimeDynamic = () => {
   const {priceStore} = useContext(StoreContext);
-  // const {
-  //   isDynamicEnabled,
-  //   quantityDynamic,
-  //   priceStore.setQuantityDynamic,
-  //   deletePriceById,
-  //   isEdit,
-  // } = useContext(PriceContext);
 
   const getInputValue = (item) => {
     const resultItem = priceStore.quantityDynamic.find(
@@ -23,7 +14,8 @@ const InputTimeDynamic = () => {
   };
 
   const setStartInputValue = (item, value) => {
-    const newArray = [...priceStore.quantityDynamic];
+    console.log([...priceStore.quantityDynamic]);
+    const newArray = JSON.parse(JSON.stringify(priceStore.quantityDynamic));
     newArray.forEach((element) => {
       if (element.id === item.id) {
         element.start = value;
@@ -34,7 +26,7 @@ const InputTimeDynamic = () => {
   };
 
   const setEndInputValue = (item, value) => {
-    const newArray = [...priceStore.quantityDynamic];
+    const newArray = JSON.parse(JSON.stringify(priceStore.quantityDynamic));
     newArray.forEach((element) => {
       if (element.id === item.id) {
         element.end = value;
@@ -45,7 +37,7 @@ const InputTimeDynamic = () => {
   };
 
   const setPriceInputValue = (item, value) => {
-    const newArray = [...priceStore.quantityDynamic];
+    const newArray = JSON.parse(JSON.stringify(priceStore.quantityDynamic));
     newArray.forEach((element) => {
       if (element.id === item.id) {
         element.price = value;

@@ -7,10 +7,6 @@ import OpenDrawerIcon from '../../components/openDrawerIcon';
 import {observer} from 'mobx-react-lite';
 
 const Finished = ({navigation}) => {
-  // const {finishedTransactions, getFinishedCars, loading} = useContext(
-  //   GatewayContext,
-  // );
-
   const {gatewayStore} = useContext(StoreContext);
 
   useEffect(() => {
@@ -21,13 +17,13 @@ const Finished = ({navigation}) => {
       ),
     });
     gatewayStore.getFinishedCars();
-  }, [navigation]);
+  }, [navigation, gatewayStore]);
 
   return (
     <View>
       <FlatList
         refreshing={gatewayStore.loading}
-        onRefresh={gatewayStore.getFinishedCars}
+        onRefresh={() => gatewayStore.getFinishedCars()}
         data={gatewayStore.finishedTransactions}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({item}) => <CardCar data={item} />}

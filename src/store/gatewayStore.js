@@ -93,6 +93,8 @@ export default class GatewayStore {
   }
 
   getFinishedCars() {
+    console.log('oi');
+    console.log(this.authStore.companyId);
     axios
       .get(`transaction/finished/${this.authStore.companyId}`)
       .then((res) => {

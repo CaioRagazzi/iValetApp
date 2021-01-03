@@ -133,7 +133,7 @@ export default class PriceStore {
 
   handleSwitches(type) {
     if (type === 'fixed') {
-      runInAction(() => (this.price = 1));
+      runInAction(() => (this.typePrice = 1));
       if (!this.isFixedEnabled && this.isDynamicEnabled) {
         runInAction(() => {
           this.isDynamicEnabled = false;
@@ -143,7 +143,7 @@ export default class PriceStore {
         this.isFixedEnabled = !this.isFixedEnabled;
       });
     } else {
-      runInAction(() => (this.price = 2));
+      runInAction(() => (this.typePrice = 2));
       if (!this.isDynamicEnabled && this.isFixedEnabled) {
         runInAction(() => {
           this.isFixedEnabled = false;
@@ -286,6 +286,7 @@ export default class PriceStore {
   }
 
   async createFixedPrice(weekDays) {
+    console.log(weekDays);
     let uniqueIdPrice = format(new Date(), 'HHmmssSSS');
     let created = false;
     runInAction(() => {
@@ -305,8 +306,9 @@ export default class PriceStore {
       .catch((err) => {
         if (err.response.data.message === 'Same day has already been added!') {
           showWarning('Já existe uma configuração para esse mesmo dia!');
+        } else {
+          showError('Erro ao criar o preço!');
         }
-        showError('Erro ao criar o preço!');
         created = false;
         runInAction(() => {
           this.loadingPrice = false;
@@ -334,8 +336,9 @@ export default class PriceStore {
       .catch((err) => {
         if (err.response.data.message === 'Same day has already been added!') {
           showWarning('Já existe uma configuração para esse mesmo dia!');
+        } else {
+          showError('Erro ao atualizar o preço!');
         }
-        showError('Erro ao atualizar o preço!');
         isRequestOk = false;
         runInAction(() => {
           this.loadingPrice = false;
@@ -371,8 +374,9 @@ export default class PriceStore {
               err.response.data.message === 'Same day has already been added!'
             ) {
               showWarning('Já existe uma configuração para esse mesmo dia!');
+            } else {
+              showError('Erro ao atualizar o preço!');
             }
-            showError('Erro ao atualizar o preço!');
             isRequestOk = false;
             runInAction(() => {
               this.loadingPrice = false;
@@ -406,12 +410,14 @@ export default class PriceStore {
             created = true;
           })
           .catch((err) => {
+            console.log(err.response.data);
             if (
               err.response.data.message === 'Same day has already been added!'
             ) {
               showWarning('Já existe uma configuração para esse mesmo dia!');
+            } else {
+              showError('Erro ao criar o preço!');
             }
-            showError('Erro ao criar o preço!');
             created = false;
             runInAction(() => {
               this.loadingPrice = false;

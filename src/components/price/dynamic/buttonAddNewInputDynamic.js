@@ -1,7 +1,5 @@
 import React, {useContext, useState} from 'react';
 import {TouchableOpacity, StyleSheet, ActivityIndicator} from 'react-native';
-import {PriceContext} from '../../../contexts/price';
-import {AuthContext} from '../../../contexts/auth';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from '../../../services/axios';
 import {format} from 'date-fns';
@@ -11,14 +9,6 @@ import {observer} from 'mobx-react-lite';
 const ButtonAddNewInputDynamic = () => {
   const {priceStore, authStore} = useContext(StoreContext);
   const [loadingButtonAdd, setLoadingButtonAdd] = useState(false);
-  // const {
-  //   isDynamicEnabled,
-  //   setQuantityDynamic,
-  //   quantityDynamic,
-  //   isEdit,
-  // } = useContext(PriceContext);
-
-  // const {companyId} = useContext(AuthContext);
 
   const addNewInput = async () => {
     if (priceStore.isEdit) {
@@ -37,12 +27,12 @@ const ButtonAddNewInputDynamic = () => {
             : null,
         })
         .then((res) => {
-          priceStore.setQuantityDynamic((previousState) => [
-            ...previousState,
+          priceStore.setQuantityDynamic([
+            ...priceStore.quantityDynamic,
             {
               id: res.data[0].id,
-              uniqueIdPrice: previousState[0].uniqueIdPrice,
-              weekDay: previousState[0].weekDay,
+              uniqueIdPrice: priceStore.quantityDynamic[0].uniqueIdPrice,
+              weekDay: priceStore.quantityDynamic[0].weekDay,
               start: '',
               end: '',
               price: '',
@@ -54,12 +44,12 @@ const ButtonAddNewInputDynamic = () => {
           setLoadingButtonAdd(false);
         });
     } else {
-      priceStore.setQuantityDynamic((previousState) => [
-        ...previousState,
+      priceStore.setQuantityDynamic([
+        ...priceStore.quantityDynamic,
         {
           id: format(new Date(), 'HHmmssSSS'),
-          uniqueIdPrice: previousState[0].uniqueIdPrice,
-          weekDay: previousState[0].weekDay,
+          uniqueIdPrice: priceStore.quantityDynamic[0].uniqueIdPrice,
+          weekDay: priceStore.quantityDynamic[0].weekDay,
           start: '',
           end: '',
           price: '',

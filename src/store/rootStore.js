@@ -1,4 +1,5 @@
 import {createContext} from 'react';
+import MonthlyPriceStore from './monthlyPrices';
 import AuthStore from './authStore';
 import CaixaStore from './caixaStore';
 import GatewayStore from './gatewayStore';
@@ -10,6 +11,7 @@ class RootStore {
     this.caixaStore = new CaixaStore(this);
     this.gatewayStore = new GatewayStore(this);
     this.priceStore = new PriceStore(this);
+    this.monthlyStore = new MonthlyPriceStore(this);
   }
 }
 

@@ -16,7 +16,7 @@ import {HeaderBackButton} from '@react-navigation/stack';
 import FixedContainer from '../../../components/price/fixed/fixedContainer';
 import DynamicContainer from '../../../components/price/dynamic/dynamicContainer';
 import {StoreContext} from '../../../store/rootStore';
-import { observer } from 'mobx-react-lite';
+import {observer} from 'mobx-react-lite';
 
 const HandlePrice = ({navigation, route}) => {
   const {priceStore} = useContext(StoreContext);
@@ -94,16 +94,11 @@ const HandlePrice = ({navigation, route}) => {
           return;
         }
         if (!priceStore.isEdit) {
-          await priceStore
-            .createDynamicPrice(
-              priceStore.selectedWeekDays,
-              priceStore.hasMaxValue,
-              priceStore.maxValue,
-            )
-            .then((res) => {
-              created = res;
-              priceStore.setLoadingPrice(false);
-            });
+          console.log(selectedWeekDays);
+          await priceStore.createDynamicPrice(selectedWeekDays).then((res) => {
+            created = res;
+            priceStore.setLoadingPrice(false);
+          });
         } else {
           await priceStore.updateDynamicPrice(selectedWeekDays).then((res) => {
             created = res;

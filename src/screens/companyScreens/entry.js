@@ -1,6 +1,5 @@
 import React, {useContext, useEffect} from 'react';
 import {View, FlatList} from 'react-native';
-import {GatewayContext} from '../../contexts/gateway';
 import {StoreContext} from '../../store/rootStore';
 import CardCar from '../../components/cardCar';
 import OpenDrawerIcon from '../../components/openDrawerIcon';
@@ -27,7 +26,7 @@ const Entry = ({navigation}) => {
     <View style={stylesDefault.mainContainer}>
       <FlatList
         refreshing={gatewayStore.loading}
-        onRefresh={gatewayStore.getOpenedCars}
+        onRefresh={() => gatewayStore.getOpenedCars()}
         data={gatewayStore.openedTransactions}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({item}) => (

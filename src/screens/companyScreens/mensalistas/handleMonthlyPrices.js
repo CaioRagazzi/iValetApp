@@ -6,11 +6,12 @@ import {Icon} from 'native-base';
 import {HeaderBackButton} from '@react-navigation/stack';
 import SaveIcon from '../../../components/saveIcon';
 import axios from '../../../services/axios';
-import {AuthContext} from '../../../contexts/auth';
+import {StoreContext} from '../../../store/rootStore';
 import {showWarning} from '../../../components/toast';
+import {observer} from 'mobx-react-lite';
 
-export default function HandleMonthlyPrices({navigation, route}) {
-  const {companyId} = useContext(AuthContext);
+const HandleMonthlyPrices = ({navigation, route}) => {
+  const {authStore, monthlyStore} = useContext(StoreContext);
   const [loading, setLoading] = useState(false);
   const [edit, setEdit] = useState(false);
   const [monthlyPrice, setMonthlyPrice] = useState({
@@ -53,12 +54,13 @@ export default function HandleMonthlyPrices({navigation, route}) {
         await axios
           .post('MonthlyPrices', {
             price: price,
-            companyId: companyId,
+            companyId: authStore.companyId,
             name: name,
             description: description,
           })
           .then((res) => {
             console.log(res.data);
+            monthlyStore.getPrices();
             navigation.goBack();
           })
           .catch((err) => {
@@ -67,7 +69,14 @@ export default function HandleMonthlyPrices({navigation, route}) {
       }
       setLoading(false);
     };
-  }, [navigation, route, edit, companyId, monthlyPrice]);
+  }, [
+    navigation,
+    route,
+    edit,
+    authStore.companyId,
+    monthlyPrice,
+    monthlyStore,
+  ]);
 
   return (
     <SafeAreaView>
@@ -132,7 +141,7 @@ export default function HandleMonthlyPrices({navigation, route}) {
       <OverlayLoading isLoading={loading} />
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   cardContainer: {
@@ -140,3 +149,5 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 });
+
+export default observer(HandleMonthlyPrices);
