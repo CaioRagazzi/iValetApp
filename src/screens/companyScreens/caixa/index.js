@@ -14,15 +14,19 @@ import {Card} from 'react-native-elements';
 import IconFontisto from 'react-native-vector-icons/Fontisto';
 import IconIonicons from 'react-native-vector-icons/Ionicons';
 import {CaixaContext} from '../../../contexts/caixa';
+import {StoreContext} from '../../../store/rootStore';
 import Orientation from 'react-native-orientation';
 import axios from '../../../services/axios';
 import {AuthContext} from '../../../contexts/auth';
+import {observer} from 'mobx-react-lite';
 
-export default function CaixaScreen({navigation}) {
-  const {loading, isCaixaOpened, openCloseCaixa, setLoading} = useContext(
-    CaixaContext,
-  );
-  const {companyId} = useContext(AuthContext);
+const CaixaScreen = ({navigation}) => {
+  // const {loading, isCaixaOpened, openCloseCaixa, setLoading} = useContext(
+  //   CaixaContext,
+  // );
+  // const {companyId} = useContext(AuthContext);
+
+  const {authStore, caixaStore} = useContext(StoreContext);
 
   const [orientation, setOrientation] = useState(
     Orientation.getInitialOrientation(),
@@ -48,9 +52,9 @@ export default function CaixaScreen({navigation}) {
   }, [navigation]);
 
   const getTitleCaixa = () => {
-    if (loading) {
+    if (caixaStore.loading) {
       return <ActivityIndicator color="#ffffff" />;
-    } else if (isCaixaOpened) {
+    } else if (caixaStore.isCaixaOpened) {
       return <Text style={styles.text}>Fechar Caixa</Text>;
     } else {
       return <Text style={styles.text}>Abrir Caixa</Text>;
@@ -58,14 +62,14 @@ export default function CaixaScreen({navigation}) {
   };
 
   const getIconCaixa = () => {
-    if (loading) {
+    if (caixaStore.loading) {
       return (
         <ActivityIndicator
           color="#ffffff"
           size={orientation === 'PORTRAIT' ? 'small' : 'large'}
         />
       );
-    } else if (isCaixaOpened) {
+    } else if (caixaStore.isCaixaOpened) {
       return (
         <IconFontisto
           name="dropbox"
@@ -85,11 +89,12 @@ export default function CaixaScreen({navigation}) {
   };
 
   const checkIfTheresCarInAndOpenCloseCaixa = async () => {
-    if (isCaixaOpened) {
-      setLoading(true);
-      axios.get(`transaction/opened/${companyId}`).then((res) => {
+    if (caixaStore.isCaixaOpened) {
+      caixaStore.setLoading(true);
+      axios.get(`transaction/opened/${authStore.companyId}`).then((res) => {
+        console.log(res.data);
         if (res.data === 0) {
-          openCloseCaixa();
+          caixaStore.openCloseCaixa();
         } else {
           Alert.alert(
             'Atenção',
@@ -98,18 +103,18 @@ export default function CaixaScreen({navigation}) {
               {
                 text: 'Cancelar',
                 onPress: () => {
-                  setLoading(false);
+                  caixaStore.setLoading(false);
                 },
                 style: 'cancel',
               },
-              {text: 'Sim', onPress: () => openCloseCaixa()},
+              {text: 'Sim', onPress: () => caixaStore.openCloseCaixa()},
             ],
             {cancelable: false},
           );
         }
       });
     } else {
-      openCloseCaixa();
+      caixaStore.openCloseCaixa();
     }
   };
 
@@ -131,7 +136,7 @@ export default function CaixaScreen({navigation}) {
       </ScrollView>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   iconContainer: {
@@ -174,3 +179,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export default observer(CaixaScreen);

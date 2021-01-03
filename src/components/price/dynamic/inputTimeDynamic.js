@@ -2,58 +2,61 @@ import React, {useContext} from 'react';
 import {PriceContext} from '../../../contexts/price';
 import InputTimer from './InputTimer';
 import {showWarning} from '../../toast';
+import {StoreContext} from '../../../store/rootStore';
+import {observer} from 'mobx-react-lite';
 
-export default function InputTimeDynamic() {
-  const {
-    isDynamicEnabled,
-    quantityDynamic,
-    setQuantityDynamic,
-    deletePriceById,
-    isEdit,
-  } = useContext(PriceContext);
+const InputTimeDynamic = () => {
+  const {priceStore} = useContext(StoreContext);
+  // const {
+  //   isDynamicEnabled,
+  //   quantityDynamic,
+  //   priceStore.setQuantityDynamic,
+  //   deletePriceById,
+  //   isEdit,
+  // } = useContext(PriceContext);
 
   const getInputValue = (item) => {
-    const resultItem = quantityDynamic.find(
+    const resultItem = priceStore.quantityDynamic.find(
       (element) => element.id === item.id,
     );
     return resultItem;
   };
 
   const setStartInputValue = (item, value) => {
-    const newArray = [...quantityDynamic];
+    const newArray = [...priceStore.quantityDynamic];
     newArray.forEach((element) => {
       if (element.id === item.id) {
         element.start = value;
       }
     });
 
-    setQuantityDynamic(newArray);
+    priceStore.setQuantityDynamic(newArray);
   };
 
   const setEndInputValue = (item, value) => {
-    const newArray = [...quantityDynamic];
+    const newArray = [...priceStore.quantityDynamic];
     newArray.forEach((element) => {
       if (element.id === item.id) {
         element.end = value;
       }
     });
 
-    setQuantityDynamic(newArray);
+    priceStore.setQuantityDynamic(newArray);
   };
 
   const setPriceInputValue = (item, value) => {
-    const newArray = [...quantityDynamic];
+    const newArray = [...priceStore.quantityDynamic];
     newArray.forEach((element) => {
       if (element.id === item.id) {
         element.price = value;
       }
     });
 
-    setQuantityDynamic(newArray);
+    priceStore.setQuantityDynamic(newArray);
   };
 
-  return isDynamicEnabled
-    ? quantityDynamic.map((item) => (
+  return priceStore.isDynamicEnabled
+    ? priceStore.quantityDynamic.map((item) => (
         <InputTimer
           startValue={getInputValue(item)?.start}
           onStartChangeText={(value) => setStartInputValue(item, value)}
@@ -66,4 +69,6 @@ export default function InputTimeDynamic() {
         />
       ))
     : null;
-}
+};
+
+export default observer(InputTimeDynamic);

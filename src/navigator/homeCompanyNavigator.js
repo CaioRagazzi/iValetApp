@@ -78,61 +78,55 @@ function CaixaStackNavigator() {
 
 function HomeTabNavigator() {
   return (
-    <GatewayProvider>
-      <Tab.Navigator
-        tabBarOptions={{
-          activeTintColor: '#ffffff',
-          inactiveTintColor: '#ffffff',
-          activeBackgroundColor: '#7c43bd',
-          inactiveBackgroundColor: '#7c43bd',
-          keyboardHidesTabBar: true,
-        }}>
-        <Tab.Screen
-          name="Home"
-          component={HomeStackNavigator}
-          options={{
-            tabBarIcon: ({focused}) =>
-              focused ? (
-                <Icon
-                  type="MaterialIcons"
-                  name="home"
-                  style={{color: '#ffffff'}}
-                />
-              ) : (
-                <IconOcticons name="home" size={23} color="#ffffff" />
-              ),
-          }}
-        />
-        <Tab.Screen
-          name="Entrada"
-          component={EntryStackNavigator}
-          options={{
-            tabBarIcon: ({focused}) =>
-              focused ? (
-                <IconFeather name="arrow-up-circle" size={28} color="#ffffff" />
-              ) : (
-                <IconFeather name="arrow-up" size={24} color="#ffffff" />
-              ),
-          }}
-        />
-        <Tab.Screen
-          name="Saida"
-          component={FinishedStackNavigator}
-          options={{
-            tabBarIcon: ({focused}) =>
-              focused ? (
-                <IconFeather
-                  name="arrow-down-circle"
-                  size={28}
-                  color="#ffffff"
-                />
-              ) : (
-                <IconFeather name="arrow-down" size={24} color="#ffffff" />
-              ),
-          }}
-        />
-      </Tab.Navigator>
-    </GatewayProvider>
+    <Tab.Navigator
+      tabBarOptions={{
+        activeTintColor: '#ffffff',
+        inactiveTintColor: '#ffffff',
+        activeBackgroundColor: '#7c43bd',
+        inactiveBackgroundColor: '#7c43bd',
+        keyboardHidesTabBar: true,
+      }}>
+      <Tab.Screen
+        name="Home"
+        component={HomeStackNavigator}
+        options={{
+          tabBarIcon: ({focused}) =>
+            focused ? (
+              <Icon
+                type="MaterialIcons"
+                name="home"
+                style={{color: '#ffffff'}}
+              />
+            ) : (
+              <IconOcticons name="home" size={23} color="#ffffff" />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="Entrada"
+        component={EntryStackNavigator}
+        options={{
+          tabBarIcon: ({focused}) =>
+            focused ? (
+              <IconFeather name="arrow-up-circle" size={28} color="#ffffff" />
+            ) : (
+              <IconFeather name="arrow-up" size={24} color="#ffffff" />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="Saida"
+        component={FinishedStackNavigator}
+        options={{
+          tabBarIcon: ({focused}) =>
+            focused ? (
+              <IconFeather name="arrow-down-circle" size={28} color="#ffffff" />
+            ) : (
+              <IconFeather name="arrow-down" size={24} color="#ffffff" />
+            ),
+        }}
+      />
+    </Tab.Navigator>
   );
 }
 
@@ -181,16 +175,14 @@ function FinishedStackNavigator() {
 
 function PricesStackNavigator() {
   return (
-    <PriceProvider>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: {backgroundColor: '#4a148c'},
-          headerTitleStyle: {color: '#ffffff'},
-        }}>
-        <Stack.Screen name="Prices" component={PricesScreen} />
-        <Stack.Screen name="HandlePrice" component={HandlePriceScreen} />
-      </Stack.Navigator>
-    </PriceProvider>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {backgroundColor: '#4a148c'},
+        headerTitleStyle: {color: '#ffffff'},
+      }}>
+      <Stack.Screen name="Prices" component={PricesScreen} />
+      <Stack.Screen name="HandlePrice" component={HandlePriceScreen} />
+    </Stack.Navigator>
   );
 }
 

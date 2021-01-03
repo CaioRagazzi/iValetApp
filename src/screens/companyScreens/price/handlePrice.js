@@ -15,35 +15,38 @@ import {showWarning} from '../../../components/toast';
 import {HeaderBackButton} from '@react-navigation/stack';
 import FixedContainer from '../../../components/price/fixed/fixedContainer';
 import DynamicContainer from '../../../components/price/dynamic/dynamicContainer';
+import {StoreContext} from '../../../store/rootStore';
+import { observer } from 'mobx-react-lite';
 
-export default function HandlePrice({navigation, route}) {
-  const {
-    fixedValue,
-    cleanFields,
-    quantityDynamic,
-    setQuantityDynamic,
-    createFixedPrice,
-    createDynamicPrice,
-    hasMaxValue,
-    maxValue,
-    updateFixedPrice,
-    typePrice,
-    isFixedEnabled,
-    isDynamicEnabled,
-    isEdit,
-    setIsEdit,
-    updateDynamicPrice,
-    loadingPrice,
-    setLoadingPrice,
-  } = useContext(PriceContext);
+const HandlePrice = ({navigation, route}) => {
+  const {priceStore} = useContext(StoreContext);
+  // const {
+  //   fixedValue,
+  //   cleanFields,
+  //   quantityDynamic,
+  //   setQuantityDynamic,
+  //   createFixedPrice,
+  //   createDynamicPrice,
+  //   hasMaxValue,
+  //   maxValue,
+  //   updateFixedPrice,
+  //   typePrice,
+  //   isFixedEnabled,
+  //   isDynamicEnabled,
+  //   isEdit,
+  //   setIsEdit,
+  //   updateDynamicPrice,
+  //   loadingPrice,
+  //   setLoadingPrice,
+  // } = useContext(PriceContext);
 
   const [selectedWeekDays, setSelectedWeekDays] = useState('');
 
   useEffect(() => {
     if (route.params) {
-      setIsEdit(true);
+      priceStore.setIsEdit(true);
     } else {
-      setIsEdit(false);
+      priceStore.setIsEdit(false);
     }
     const save = async () => {
       if (!selectedWeekDays) {
@@ -51,37 +54,37 @@ export default function HandlePrice({navigation, route}) {
         return;
       }
       let created = false;
-      console.log(typePrice);
+      console.log(priceStore.typePrice);
 
-      if (typePrice === 1) {
-        if (!fixedValue) {
+      if (priceStore.typePrice === 1) {
+        if (!priceStore.fixedValue) {
           showWarning('Favor preencher o campo valor');
           return;
         }
-        if (!isEdit) {
-          await createFixedPrice(selectedWeekDays).then((res) => {
+        if (!priceStore.isEdit) {
+          await priceStore.createFixedPrice(selectedWeekDays).then((res) => {
             created = res;
-            setLoadingPrice(false);
+            priceStore.setLoadingPrice(false);
           });
         } else {
-          await updateFixedPrice(selectedWeekDays).then((res) => {
+          await priceStore.updateFixedPrice(selectedWeekDays).then((res) => {
             created = res;
-            setLoadingPrice(false);
+            priceStore.setLoadingPrice(false);
           });
         }
         if (!created) {
           return;
         }
         navigation.goBack();
-        cleanFields();
+        priceStore.cleanFields();
       }
-      if (typePrice === 2) {
+      if (priceStore.typePrice === 2) {
         let isFieldsInvalid = false;
-        if (hasMaxValue && maxValue === '') {
+        if (priceStore.hasMaxValue && priceStore.maxValue === '') {
           showWarning('Favor preencher o campo valor máximo!');
           isFieldsInvalid = true;
         }
-        quantityDynamic.map((item) => {
+        priceStore.quantityDynamic.map((item) => {
           if (!item.start || !item.end || !item.price) {
             showWarning('Favor preencher todos os campos!');
             isFieldsInvalid = true;
@@ -90,31 +93,33 @@ export default function HandlePrice({navigation, route}) {
         if (isFieldsInvalid) {
           return;
         }
-        if (!isEdit) {
-          await createDynamicPrice(
-            selectedWeekDays,
-            hasMaxValue,
-            maxValue,
-          ).then((res) => {
-            created = res;
-            setLoadingPrice(false);
-          });
+        if (!priceStore.isEdit) {
+          await priceStore
+            .createDynamicPrice(
+              priceStore.selectedWeekDays,
+              priceStore.hasMaxValue,
+              priceStore.maxValue,
+            )
+            .then((res) => {
+              created = res;
+              priceStore.setLoadingPrice(false);
+            });
         } else {
-          await updateDynamicPrice(selectedWeekDays).then((res) => {
+          await priceStore.updateDynamicPrice(selectedWeekDays).then((res) => {
             created = res;
-            setLoadingPrice(false);
+            priceStore.setLoadingPrice(false);
           });
         }
         if (!created) {
           return;
         }
         navigation.goBack();
-        cleanFields();
+        priceStore.cleanFields();
       }
     };
     BackHandler.addEventListener('hardwareBackPress', () => {
       navigation.goBack();
-      cleanFields();
+      priceStore.cleanFields();
       return true;
     });
     navigation.setOptions({
@@ -125,34 +130,16 @@ export default function HandlePrice({navigation, route}) {
           tintColor="#ffffff"
           onPress={() => {
             navigation.goBack();
-            cleanFields();
+            priceStore.cleanFields();
           }}
         />
       ),
     });
     return () => BackHandler.removeEventListener('hardwareBackPress');
-  }, [
-    navigation,
-    quantityDynamic,
-    selectedWeekDays,
-    typePrice,
-    fixedValue,
-    route.params,
-    cleanFields,
-    setQuantityDynamic,
-    isEdit,
-    createDynamicPrice,
-    createFixedPrice,
-    hasMaxValue,
-    maxValue,
-    updateFixedPrice,
-    setIsEdit,
-    updateDynamicPrice,
-    setLoadingPrice,
-  ]);
+  }, [navigation, selectedWeekDays, route.params, priceStore]);
 
   const componentRender = () => {
-    if (loadingPrice) {
+    if (priceStore.loadingPrice) {
       return (
         <ActivityIndicator
           style={styles.mainContainer}
@@ -171,9 +158,13 @@ export default function HandlePrice({navigation, route}) {
               OnWeekDayChange={(weekDays) => setSelectedWeekDays(weekDays)}
             />
 
-            {isEdit && isFixedEnabled ? <FixedContainer /> : null}
-            {isEdit && isDynamicEnabled ? <DynamicContainer /> : null}
-            {!isEdit ? (
+            {priceStore.isEdit && priceStore.isFixedEnabled ? (
+              <FixedContainer />
+            ) : null}
+            {priceStore.isEdit && priceStore.isDynamicEnabled ? (
+              <DynamicContainer />
+            ) : null}
+            {!priceStore.isEdit ? (
               <View>
                 <FixedContainer />
                 <Divider style={styles.divider} />
@@ -187,7 +178,7 @@ export default function HandlePrice({navigation, route}) {
   };
 
   return componentRender();
-}
+};
 
 const styles = StyleSheet.create({
   containerScroll: {
@@ -213,3 +204,5 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 });
+
+export default observer(HandlePrice);

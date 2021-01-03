@@ -1,13 +1,19 @@
 import React, {useEffect, useContext} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import FloatingActionButton from '../../components/floatingActionButton';
-import {CaixaContext} from '../../contexts/caixa';
+import {StoreContext} from '../../store/rootStore';
 import OpenDrawerIcon from '../../components/openDrawerIcon';
 import {stylesDefault} from '../../styles/defaultStyles';
 import {showWarning} from '../../components/toast';
+import {observer} from 'mobx-react-lite';
 
-export default function HomeScreen({navigation}) {
-  const {loading, isCaixaOpened, openCloseCaixa} = useContext(CaixaContext);
+const HomeScreen = ({navigation}) => {
+  const {caixaStore} = useContext(StoreContext);
+
+  useEffect(() => {
+    caixaStore.getOpenedCaixa();
+  }, []);
+
   useEffect(() => {
     navigation.setOptions({
       title: 'Início',
@@ -18,7 +24,7 @@ export default function HomeScreen({navigation}) {
   }, [navigation]);
 
   const handleCarEnty = () => {
-    if (isCaixaOpened) {
+    if (caixaStore.isCaixaOpened) {
       navigation.navigate('FormEntryCar');
     } else {
       showWarning('O caixa esta fechado!');
@@ -55,13 +61,13 @@ export default function HomeScreen({navigation}) {
         onPress={() => openCloseCaixa()}
       /> */}
       <FloatingActionButton
-        isLoading={loading}
+        isLoading={caixaStore.loading}
         text="Entrada"
         onPress={() => handleCarEnty()}
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -78,3 +84,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 });
+
+export default observer(HomeScreen);

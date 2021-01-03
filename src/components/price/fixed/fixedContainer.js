@@ -2,28 +2,31 @@ import React, {useContext} from 'react';
 import {View, Text, Switch, StyleSheet} from 'react-native';
 import InputFixedPrice from './inputFixedPrice';
 import {PriceContext} from '../../../contexts/price';
+import {StoreContext} from '../../../store/rootStore';
+import {observer} from 'mobx-react-lite';
 
-export default function FixedContainer() {
-  const {isFixedEnabled, handleSwitches, isEdit} = useContext(PriceContext);
+const FixedContainer = () => {
+  const {priceStore} = useContext(StoreContext);
+  // const {isFixedEnabled, handleSwitches, isEdit} = useContext(PriceContext);
 
   return (
     <View>
       <View style={styles.containerTexts}>
         <Text style={styles.text}>Valor Fixo: </Text>
-        {!isEdit ? (
+        {!priceStore.isEdit ? (
           <Switch
             trackColor={{false: '#767577', true: '#12005e'}}
-            thumbColor={isFixedEnabled ? '#7c43bd' : '#f4f3f4'}
+            thumbColor={priceStore.isFixedEnabled ? '#7c43bd' : '#f4f3f4'}
             ios_backgroundColor="#3e3e3e"
-            onValueChange={() => handleSwitches('fixed')}
-            value={isFixedEnabled}
+            onValueChange={() => priceStore.handleSwitches('fixed')}
+            value={priceStore.isFixedEnabled}
           />
         ) : null}
       </View>
       <InputFixedPrice />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   containerTexts: {
@@ -32,3 +35,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+export default observer(FixedContainer);

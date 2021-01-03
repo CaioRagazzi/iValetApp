@@ -10,14 +10,17 @@ import {Input} from 'react-native-elements';
 import {PriceContext} from '../../../contexts/price';
 import {showWarning} from '../../toast';
 import Orientation from 'react-native-orientation';
+import {StoreContext} from '../../../store/rootStore';
+import {observer} from 'mobx-react-lite';
 
-export default function InputTimer(props) {
-  const {
-    quantityDynamic,
-    setQuantityDynamic,
-    deletePriceById,
-    isEdit,
-  } = useContext(PriceContext);
+const InputTimer = (props) => {
+  const {priceStore} = useContext(StoreContext);
+  // const {
+  //   quantityDynamic,
+  //   setQuantityDynamic,
+  //   deletePriceById,
+  //   isEdit,
+  // } = useContext(PriceContext);
   const [loadingDeleteButton, setLoadingDeleteButton] = useState(false);
   const [orientation, setOrientation] = useState(
     Orientation.getInitialOrientation(),
@@ -37,13 +40,13 @@ export default function InputTimer(props) {
 
   const onRemove = async () => {
     setLoadingDeleteButton(true);
-    if (quantityDynamic.length <= 1) {
+    if (priceStore.quantityDynamic.length <= 1) {
       showWarning('É necessário ter pelo menos um campo');
       setLoadingDeleteButton(false);
       return;
     } else {
-      if (isEdit) {
-        await deletePriceById(props.onRemove).then((res) => {
+      if (priceStore.isEdit) {
+        await priceStore.deletePriceById(props.onRemove).then((res) => {
           removeIndexFromArray();
         });
       } else {
@@ -53,10 +56,10 @@ export default function InputTimer(props) {
   };
 
   const removeIndexFromArray = () => {
-    const newArray = quantityDynamic.filter((item) => {
+    const newArray = priceStore.quantityDynamic.filter((item) => {
       return props.onRemove !== item.id;
     });
-    setQuantityDynamic(newArray);
+    priceStore.setQuantityDynamic(newArray);
   };
 
   const deleteButton = () => {
@@ -114,7 +117,7 @@ export default function InputTimer(props) {
       {deleteButton()}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   inputMainContainerDynamic: {
@@ -139,3 +142,5 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 });
+
+export default observer(InputTimer);

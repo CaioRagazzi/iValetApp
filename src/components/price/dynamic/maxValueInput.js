@@ -3,21 +3,24 @@ import {StyleSheet} from 'react-native';
 import {PriceContext} from '../../../contexts/price';
 import {Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {StoreContext} from '../../../store/rootStore';
+import {observer} from 'mobx-react-lite';
 
-export default function MaxValueInput() {
-  const {hasMaxValue, maxValue, setMaxValue} = useContext(PriceContext);
-  return hasMaxValue ? (
+const MaxValueInput = () => {
+  const {priceStore} = useContext(StoreContext);
+  // const {hasMaxValue, maxValue, setMaxValue} = useContext(PriceContext);
+  return priceStore.hasMaxValue ? (
     <Input
       labelStyle={styles.labelStyle}
       inputContainerStyle={styles.inputContainerMaxValue}
       leftIconContainerStyle={styles.inputIconContainerMaxValue}
       leftIcon={<Icon name="cash-outline" size={18} color="black" />}
       keyboardType="numeric"
-      value={maxValue}
-      onChangeText={(text) => setMaxValue(text)}
+      value={priceStore.maxValue}
+      onChangeText={(text) => priceStore.setMaxValue(text)}
     />
   ) : null;
-}
+};
 
 const styles = StyleSheet.create({
   inputContainerMaxValue: {
@@ -33,3 +36,5 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
 });
+
+export default observer(MaxValueInput);

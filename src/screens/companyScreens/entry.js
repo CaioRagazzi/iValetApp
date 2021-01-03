@@ -1,14 +1,18 @@
 import React, {useContext, useEffect} from 'react';
 import {View, FlatList} from 'react-native';
 import {GatewayContext} from '../../contexts/gateway';
+import {StoreContext} from '../../store/rootStore';
 import CardCar from '../../components/cardCar';
 import OpenDrawerIcon from '../../components/openDrawerIcon';
 import {stylesDefault} from '../../styles/defaultStyles';
+import {observer} from 'mobx-react-lite';
 
-export default function Entry({navigation}) {
-  const {openedTransactions, getOpenedCars, loading} = useContext(
-    GatewayContext,
-  );
+const Entry = ({navigation}) => {
+  const {gatewayStore} = useContext(StoreContext);
+  useEffect(() => {
+    gatewayStore.init();
+    gatewayStore.getOpenedCars();
+  }, []);
 
   useEffect(() => {
     navigation.setOptions({
@@ -22,9 +26,9 @@ export default function Entry({navigation}) {
   return (
     <View style={stylesDefault.mainContainer}>
       <FlatList
-        refreshing={loading}
-        onRefresh={getOpenedCars}
-        data={openedTransactions}
+        refreshing={gatewayStore.loading}
+        onRefresh={gatewayStore.getOpenedCars}
+        data={gatewayStore.openedTransactions}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({item}) => (
           <CardCar
@@ -37,4 +41,6 @@ export default function Entry({navigation}) {
       />
     </View>
   );
-}
+};
+
+export default observer(Entry);

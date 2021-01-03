@@ -1,33 +1,38 @@
+import {observer} from 'mobx-react-lite';
 import React, {useContext, useEffect} from 'react';
 import {TouchableOpacity, SafeAreaView, StyleSheet} from 'react-native';
 import {Text as TextEl} from 'react-native-elements';
 import {PriceContext} from '../../contexts/price';
+import {StoreContext} from '../../store/rootStore';
 
-export default function DateButtonsCalendar(props) {
-  const {
-    segunda,
-    setSegunda,
-    terca,
-    setTerca,
-    quarta,
-    setQuarta,
-    quinta,
-    setQuinta,
-    sexta,
-    setSexta,
-    sabado,
-    setSabado,
-    domingo,
-    setDomingo,
-  } = useContext(PriceContext);
+const DateButtonsCalendar = (props) => {
+  const {priceStore} = useContext(StoreContext);
+  // const {
+  //   segunda,
+  //   setSegunda,
+  //   terca,
+  //   setTerca,
+  //   quarta,
+  //   setQuarta,
+  //   quinta,
+  //   setQuinta,
+  //   sexta,
+  //   setSexta,
+  //   sabado,
+  //   setSabado,
+  //   domingo,
+  //   setDomingo,
+  // } = useContext(PriceContext);
 
   useEffect(() => {
     const selectedWeekDays = () => {
-      let string = `${segunda ? 'MONDAY|' : ''}${terca ? 'TUESDAY|' : ''}${
-        quarta ? 'WEDNESDAY|' : ''
-      }${quinta ? 'THURSDAY|' : ''}${sexta ? 'FRIDAY|' : ''}${
-        sabado ? 'SATURDAY|' : ''
-      }${domingo ? 'SUNDAY|' : ''}`;
+      let string = `${priceStore.segunda ? 'MONDAY|' : ''}${
+        priceStore.terca ? 'TUESDAY|' : ''
+      }${priceStore.quarta ? 'WEDNESDAY|' : ''}${
+        priceStore.quinta ? 'THURSDAY|' : ''
+      }${priceStore.sexta ? 'FRIDAY|' : ''}${
+        priceStore.sabado ? 'SATURDAY|' : ''
+      }${priceStore.domingo ? 'SUNDAY|' : ''}`;
 
       const formatedString = deletePipeIfLast(string);
       props.OnWeekDayChange(formatedString);
@@ -42,86 +47,113 @@ export default function DateButtonsCalendar(props) {
     };
 
     selectedWeekDays();
-  }, [segunda, terca, quarta, quinta, sexta, sabado, domingo, props]);
+  }, [
+    priceStore.segunda,
+    priceStore.terca,
+    priceStore.quarta,
+    priceStore.quinta,
+    priceStore.sexta,
+    priceStore.sabado,
+    priceStore.domingo,
+    props,
+  ]);
 
   return (
     <SafeAreaView style={styles.buttonsAreaContainer}>
       <TouchableOpacity
         style={
-          segunda
+          priceStore.segunda
             ? styles.buttonsContainerEnable
             : styles.buttonsContainerDisable
         }
-        onPress={() => setSegunda(!segunda)}>
-        <TextEl h4 style={segunda ? styles.textEnable : styles.textDisable}>
+        onPress={() => priceStore.setSegunda(!priceStore.segunda)}>
+        <TextEl
+          h4
+          style={priceStore.segunda ? styles.textEnable : styles.textDisable}>
           S
         </TextEl>
       </TouchableOpacity>
       <TouchableOpacity
         style={
-          terca ? styles.buttonsContainerEnable : styles.buttonsContainerDisable
+          priceStore.terca
+            ? styles.buttonsContainerEnable
+            : styles.buttonsContainerDisable
         }
-        onPress={() => setTerca(!terca)}>
-        <TextEl h4 style={terca ? styles.textEnable : styles.textDisable}>
+        onPress={() => priceStore.setTerca(!priceStore.terca)}>
+        <TextEl
+          h4
+          style={priceStore.terca ? styles.textEnable : styles.textDisable}>
           T
         </TextEl>
       </TouchableOpacity>
       <TouchableOpacity
         style={
-          quarta
+          priceStore.quarta
             ? styles.buttonsContainerEnable
             : styles.buttonsContainerDisable
         }
-        onPress={() => setQuarta(!quarta)}>
-        <TextEl h4 style={quarta ? styles.textEnable : styles.textDisable}>
+        onPress={() => priceStore.setQuarta(!priceStore.quarta)}>
+        <TextEl
+          h4
+          style={priceStore.quarta ? styles.textEnable : styles.textDisable}>
           Q
         </TextEl>
       </TouchableOpacity>
       <TouchableOpacity
         style={
-          quinta
+          priceStore.quinta
             ? styles.buttonsContainerEnable
             : styles.buttonsContainerDisable
         }
-        onPress={() => setQuinta(!quinta)}>
-        <TextEl h4 style={quinta ? styles.textEnable : styles.textDisable}>
+        onPress={() => priceStore.setQuinta(!priceStore.quinta)}>
+        <TextEl
+          h4
+          style={priceStore.quinta ? styles.textEnable : styles.textDisable}>
           Q
         </TextEl>
       </TouchableOpacity>
       <TouchableOpacity
         style={
-          sexta ? styles.buttonsContainerEnable : styles.buttonsContainerDisable
+          priceStore.sexta
+            ? styles.buttonsContainerEnable
+            : styles.buttonsContainerDisable
         }
-        onPress={() => setSexta(!sexta)}>
-        <TextEl h4 style={sexta ? styles.textEnable : styles.textDisable}>
+        onPress={() => priceStore.setSexta(!priceStore.sexta)}>
+        <TextEl
+          h4
+          style={priceStore.sexta ? styles.textEnable : styles.textDisable}>
           S
         </TextEl>
       </TouchableOpacity>
       <TouchableOpacity
         style={
-          sabado
+          priceStore.sabado
             ? styles.buttonsContainerEnable
             : styles.buttonsContainerDisable
         }
-        onPress={() => setSabado(!sabado)}>
-        <TextEl h4 style={sabado ? styles.textEnable : styles.textDisable}>
+        onPress={() => priceStore.setSabado(!priceStore.sabado)}>
+        <TextEl
+          h4
+          style={priceStore.sabado ? styles.textEnable : styles.textDisable}>
           S
         </TextEl>
       </TouchableOpacity>
       <TouchableOpacity
         style={
-          domingo
+          priceStore.domingo
             ? styles.buttonsContainerEnable
             : styles.buttonsContainerDisable
         }
-        onPress={() => setDomingo(!domingo)}>
-        <TextEl h4 style={domingo ? styles.textEnable : styles.textDisable}>
+        onPress={() => priceStore.setDomingo(!priceStore.domingo)}>
+        <TextEl
+          h4
+          style={priceStore.domingo ? styles.textEnable : styles.textDisable}>
           D
         </TextEl>
       </TouchableOpacity>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   buttonsAreaContainer: {
@@ -152,3 +184,5 @@ const styles = StyleSheet.create({
     color: '#41484F',
   },
 });
+
+export default observer(DateButtonsCalendar);

@@ -1,4 +1,4 @@
-import {runInAction} from 'mobx';
+import {runInAction, makeObservable, observable, action} from 'mobx';
 import axios from '../services/axios';
 import {showInformation} from '../components/toast';
 
@@ -8,7 +8,18 @@ export default class CaixaStore {
   isCaixaOpened = false;
 
   constructor(rootStore) {
+    makeObservable(this, {
+      loading: observable,
+      isCaixaOpened: observable,
+      openCloseCaixa: action,
+      getOpenedCaixa: action,
+      setLoading: action,
+    });
     this.authStore = rootStore.authStore;
+  }
+
+  setLoading(value) {
+    this.loading = value;
   }
 
   async openCloseCaixa() {

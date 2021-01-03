@@ -1,14 +1,17 @@
-import React, {useEffect, useContext} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import {View, ScrollView, StyleSheet, ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import jwt_decode from 'jwt-decode';
 import axios from '../../services/axios';
+import OverlayCompanies from '../../components/overlayCompanies/index';
 
 import {StoreContext} from '../../store/rootStore';
 import {observer} from 'mobx-react-lite';
 
 const LoadingScreen = () => {
   const {authStore} = useContext(StoreContext);
+  const [overlayVisible, setOverlayVisible] = useState(false);
+  const [companies, setCompanies] = useState([]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -23,8 +26,13 @@ const LoadingScreen = () => {
             await axios
               .get(`user/${decodedToken.id}`)
               .then((res) => {
-                const companyId = res.data.company[0].id;
-                authStore.setLoggedIn(1, companyId);
+                if (res.data.companies.length > 1) {
+                  setCompanies(res.data.companies);
+                  setOverlayVisible(true);
+                } else {
+                  const companyId = res.data.companies[0].id;
+                  authStore.setLoggedIn(1, companyId);
+                }
               })
               .catch(() => {
                 authStore.setNotLoggedIn();
@@ -44,12 +52,28 @@ const LoadingScreen = () => {
     authStore,
   ]);
 
+  const closeOverlay = () => {
+    setOverlayVisible(false);
+    authStore.logOut();
+  };
+
+  const handleSelectedCompany = async (value) => {
+    setOverlayVisible(false);
+    authStore.setLoggedIn(1, value.id);
+  };
+
   return (
     <View style={styles.viewContainer}>
       <ScrollView
         contentContainerStyle={styles.mainContainer}
         keyboardShouldPersistTaps="handled">
         <ActivityIndicator size="large" color="#9E8170" />
+        <OverlayCompanies
+          visible={overlayVisible}
+          companies={companies}
+          onPress={handleSelectedCompany}
+          onClose={() => closeOverlay()}
+        />
       </ScrollView>
     </View>
   );

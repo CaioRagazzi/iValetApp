@@ -3,6 +3,7 @@ import {SafeAreaView, ScrollView, StyleSheet, Keyboard} from 'react-native';
 import {Input, Card} from 'react-native-elements';
 import axios from '../../services/axios';
 import {AuthContext} from '../../contexts/auth';
+import {StoreContext} from '../../store/rootStore';
 import {Icon} from 'native-base';
 import {showError} from '../../components/toast';
 import SaveIcon from '../../components/saveIcon';
@@ -11,7 +12,8 @@ import OverlayLoading from '../../components/overlayLoading';
 import {showWarning} from '../../components/toast';
 
 export default function FormCarEntryScreen({navigation}) {
-  const {companyId} = useContext(AuthContext);
+  // const {companyId} = useContext(AuthContext);
+  const {authStore} = useContext(StoreContext);
   const [placa, setPlaca] = useState('');
   const [prisma, setPrisma] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -28,7 +30,7 @@ export default function FormCarEntryScreen({navigation}) {
       await axios
         .post('transaction', {
           placa,
-          companyId,
+          companyId: authStore.companyId,
           prismaNumber: +prisma,
         })
         .then((res) => {
@@ -56,7 +58,7 @@ export default function FormCarEntryScreen({navigation}) {
         />
       ),
     });
-  }, [navigation, companyId, placa, prisma]);
+  }, [navigation, placa, prisma, authStore.companyId]);
 
   return (
     <SafeAreaView>

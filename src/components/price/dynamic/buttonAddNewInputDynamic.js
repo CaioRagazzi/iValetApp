@@ -5,36 +5,39 @@ import {AuthContext} from '../../../contexts/auth';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from '../../../services/axios';
 import {format} from 'date-fns';
+import {StoreContext} from '../../../store/rootStore';
+import {observer} from 'mobx-react-lite';
 
-export default function ButtonAddNewInputDynamic() {
+const ButtonAddNewInputDynamic = () => {
+  const {priceStore, authStore} = useContext(StoreContext);
   const [loadingButtonAdd, setLoadingButtonAdd] = useState(false);
-  const {
-    isDynamicEnabled,
-    setQuantityDynamic,
-    quantityDynamic,
-    isEdit,
-  } = useContext(PriceContext);
+  // const {
+  //   isDynamicEnabled,
+  //   setQuantityDynamic,
+  //   quantityDynamic,
+  //   isEdit,
+  // } = useContext(PriceContext);
 
-  const {companyId} = useContext(AuthContext);
+  // const {companyId} = useContext(AuthContext);
 
   const addNewInput = async () => {
-    if (isEdit) {
+    if (priceStore.isEdit) {
       setLoadingButtonAdd(true);
       await axios
         .post('price', {
           type: 2,
           to: null,
           from: null,
-          weekDay: quantityDynamic[0].weekDay,
-          companyId,
+          weekDay: priceStore.quantityDynamic[0].weekDay,
+          companyId: authStore.companyId,
           price: 0,
-          uniqueIdPrice: quantityDynamic[0].uniqueIdPrice,
-          maxPriceValue: quantityDynamic[0].maxPriceValue
-            ? +quantityDynamic[0].maxPriceValue
+          uniqueIdPrice: priceStore.quantityDynamic[0].uniqueIdPrice,
+          maxPriceValue: priceStore.quantityDynamic[0].maxPriceValue
+            ? +priceStore.quantityDynamic[0].maxPriceValue
             : null,
         })
         .then((res) => {
-          setQuantityDynamic((previousState) => [
+          priceStore.setQuantityDynamic((previousState) => [
             ...previousState,
             {
               id: res.data[0].id,
@@ -51,7 +54,7 @@ export default function ButtonAddNewInputDynamic() {
           setLoadingButtonAdd(false);
         });
     } else {
-      setQuantityDynamic((previousState) => [
+      priceStore.setQuantityDynamic((previousState) => [
         ...previousState,
         {
           id: format(new Date(), 'HHmmssSSS'),
@@ -68,7 +71,7 @@ export default function ButtonAddNewInputDynamic() {
   const button = () => {
     if (loadingButtonAdd) {
       return <ActivityIndicator size="small" color="#0000ff" />;
-    } else if (isDynamicEnabled) {
+    } else if (priceStore.isDynamicEnabled) {
       return (
         <TouchableOpacity
           style={styles.addButton}
@@ -82,7 +85,7 @@ export default function ButtonAddNewInputDynamic() {
   };
 
   return button();
-}
+};
 
 const styles = StyleSheet.create({
   addButton: {
@@ -91,3 +94,5 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
 });
+
+export default observer(ButtonAddNewInputDynamic);

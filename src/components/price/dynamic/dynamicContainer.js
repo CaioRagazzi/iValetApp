@@ -5,38 +5,41 @@ import CheckBox from '@react-native-community/checkbox';
 import InputTimeDynamic from './inputTimeDynamic';
 import ButtonAddNewInputDynamic from './buttonAddNewInputDynamic';
 import MaxValueInput from './maxValueInput';
+import {StoreContext} from '../../../store/rootStore';
+import {observer} from 'mobx-react-lite';
 
-export default function DynamicContainer() {
-  const {
-    isDynamicEnabled,
-    hasMaxValue,
-    setHasMaxValue,
-    handleSwitches,
-    isEdit,
-  } = useContext(PriceContext);
+const DynamicContainer = () => {
+  const {priceStore} = useContext(StoreContext);
+  // const {
+  //   isDynamicEnabled,
+  //   hasMaxValue,
+  //   setHasMaxValue,
+  //   handleSwitches,
+  //   isEdit,
+  // } = useContext(PriceContext);
 
   const dynamicContainer = () => {
     return (
       <View>
         <View style={styles.containerTexts}>
           <Text style={styles.text}>Valor Dinâmico: </Text>
-          {!isEdit ? (
+          {!priceStore.isEdit ? (
             <Switch
               trackColor={{false: '#767577', true: '#12005e'}}
-              thumbColor={isDynamicEnabled ? '#7c43bd' : '#f4f3f4'}
+              thumbColor={priceStore.isDynamicEnabled ? '#7c43bd' : '#f4f3f4'}
               ios_backgroundColor="#3e3e3e"
-              onValueChange={() => handleSwitches('dynamic')}
-              value={isDynamicEnabled}
+              onValueChange={() => priceStore.handleSwitches('dynamic')}
+              value={priceStore.isDynamicEnabled}
             />
           ) : null}
         </View>
-        {isDynamicEnabled ? (
+        {priceStore.isDynamicEnabled ? (
           <View>
             <View style={styles.containerMaxValue}>
               <CheckBox
                 disabled={false}
-                value={hasMaxValue}
-                onValueChange={(inp) => setHasMaxValue(inp)}
+                value={priceStore.hasMaxValue}
+                onValueChange={(inp) => priceStore.setHasMaxValue(inp)}
               />
               <Text>Valor máximo</Text>
             </View>
@@ -56,7 +59,7 @@ export default function DynamicContainer() {
       <ButtonAddNewInputDynamic />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   containerMaxValue: {
@@ -64,3 +67,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+export default observer(DynamicContainer);

@@ -7,10 +7,13 @@ import {format, subHours, differenceInMinutes, parseISO} from 'date-fns';
 import {AuthContext} from '../../contexts/auth';
 import {showWarning} from '../../components/toast';
 import OverlayLoading from '../../components/overlayLoading';
+import {observer} from 'mobx-react-lite';
+import {StoreContext} from '../../store/rootStore';
 
-export default function CarDetails({route, navigation}) {
+const CarDetails = ({route, navigation}) => {
   const {transactionParam} = route.params;
-  const {companyId} = useContext(AuthContext);
+  // const {companyId} = useContext(AuthContext);
+  const {authStore} = useContext(StoreContext);
   const [price, setPrice] = useState(0);
   const [loading, setLoading] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);
@@ -22,7 +25,7 @@ export default function CarDetails({route, navigation}) {
       .get('price/week/day', {
         params: {
           weekday: format(new Date(), 'iiii').toString(),
-          companyId: companyId,
+          companyId: authStore.companyId,
         },
       })
       .then((res) => {
@@ -77,7 +80,12 @@ export default function CarDetails({route, navigation}) {
         console.log(err.response);
         console.log(err);
       });
-  }, [navigation, transactionParam.placa, companyId, transactionParam]);
+  }, [
+    navigation,
+    transactionParam.placa,
+    authStore.companyId,
+    transactionParam,
+  ]);
 
   const handleBaixaVeiculo = async () => {
     setLoadingPage(true);
@@ -132,7 +140,7 @@ export default function CarDetails({route, navigation}) {
       <OverlayLoading isLoading={loadingPage} />
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -169,3 +177,5 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
 });
+
+export default observer(CarDetails);

@@ -1,13 +1,17 @@
 import React, {useContext, useEffect} from 'react';
 import {View, FlatList} from 'react-native';
 import {GatewayContext} from '../../contexts/gateway';
+import {StoreContext} from '../../store/rootStore';
 import CardCar from '../../components/cardCar';
 import OpenDrawerIcon from '../../components/openDrawerIcon';
+import {observer} from 'mobx-react-lite';
 
-export default function Finished({navigation}) {
-  const {finishedTransactions, getFinishedCars, loading} = useContext(
-    GatewayContext,
-  );
+const Finished = ({navigation}) => {
+  // const {finishedTransactions, getFinishedCars, loading} = useContext(
+  //   GatewayContext,
+  // );
+
+  const {gatewayStore} = useContext(StoreContext);
 
   useEffect(() => {
     navigation.setOptions({
@@ -16,17 +20,20 @@ export default function Finished({navigation}) {
         <OpenDrawerIcon onPress={() => navigation.toggleDrawer()} />
       ),
     });
+    gatewayStore.getFinishedCars();
   }, [navigation]);
 
   return (
     <View>
       <FlatList
-        refreshing={loading}
-        onRefresh={getFinishedCars}
-        data={finishedTransactions}
+        refreshing={gatewayStore.loading}
+        onRefresh={gatewayStore.getFinishedCars}
+        data={gatewayStore.finishedTransactions}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({item}) => <CardCar data={item} />}
       />
     </View>
   );
-}
+};
+
+export default observer(Finished);

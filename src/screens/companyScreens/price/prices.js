@@ -16,15 +16,18 @@ import {showWarning} from '../../../components/toast';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Icon from 'react-native-vector-icons/Ionicons';
 import OpenDrawerIcon from '../../../components/openDrawerIcon';
+import {observer} from 'mobx-react-lite';
+import {StoreContext} from '../../../store/rootStore';
 
-export default function Prices({navigation}) {
-  const {companyId} = useContext(AuthContext);
-  const {
-    populateFields,
-    setTypePrice,
-    setPrice,
-    deletePriceByUniqueId,
-  } = useContext(PriceContext);
+const Prices = ({navigation}) => {
+  // const {companyId} = useContext(AuthContext);
+  const {authStore, priceStore} = useContext(StoreContext);
+  // const {
+  //   populateFields,
+  //   setTypePrice,
+  //   setPrice,
+  //   deletePriceByUniqueId,
+  // } = useContext(PriceContext);
   const [prices, setPrices] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
@@ -41,7 +44,7 @@ export default function Prices({navigation}) {
     });
 
     getPrices();
-  }, [navigation, companyId, getPrices]);
+  }, [navigation, authStore.companyId, getPrices]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -55,7 +58,7 @@ export default function Prices({navigation}) {
     setLoading(true);
     setPrices();
     await axios
-      .get(`price/${companyId}`)
+      .get(`price/${authStore.companyId}`)
       .then((res) => {
         setPrices(res.data);
         setLoading(false);
@@ -64,12 +67,12 @@ export default function Prices({navigation}) {
         showWarning('Erro buscando preços');
         setLoading(false);
       });
-  }, [companyId]);
+  }, [authStore.companyId]);
 
   const goToEditPrice = (price) => {
-    setPrice(price);
-    setTypePrice(price.type);
-    populateFields(price);
+    priceStore.setPrice(price);
+    priceStore.setTypePrice(price.type);
+    priceStore.populateFields(price);
     navigation.navigate('HandlePrice', {edit: true});
   };
 
@@ -98,7 +101,7 @@ export default function Prices({navigation}) {
 
   const deletePrice = async (value) => {
     setLoadingDelete(true);
-    await deletePriceByUniqueId(value.uniqueIdPrice).then((res) => {
+    await priceStore.deletePriceByUniqueId(value.uniqueIdPrice).then((res) => {
       if (res) {
         getPrices();
         setLoadingDelete(false);
@@ -180,7 +183,7 @@ export default function Prices({navigation}) {
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   mainContainerDelete: {
@@ -193,3 +196,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
+
+export default observer(Prices);
