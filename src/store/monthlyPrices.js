@@ -31,4 +31,53 @@ export default class MonthlyPriceStore {
         showError('Erro ao carregar tabelas de preços!');
       });
   }
+
+  async editMonthlyPrice(monthlyPrice) {
+    await axios
+      .patch(`MonthlyPrices/${monthlyPrice.id}`, {
+        price: monthlyPrice.price,
+        companyId: this.authStore.companyId,
+        name: monthlyPrice.name,
+        description: monthlyPrice.description,
+      })
+      .then((res) => {
+        this.getPrices();
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+  }
+
+  async createMonthlyPrice(monthlyPrice) {
+    await axios
+      .post('MonthlyPrices', {
+        price: monthlyPrice.price,
+        companyId: this.authStore.companyId,
+        name: monthlyPrice.name,
+        description: monthlyPrice.description,
+      })
+      .then((res) => {
+        runInAction(() => {
+          this.prices = [...this.prices, monthlyPrice];
+        });
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+  }
+
+  async deleteMonthlyPrice(monthlyPriceId) {
+    await axios
+      .delete(`MonthlyPrices/${monthlyPriceId}`)
+      .then((res) => {
+        runInAction(() => {
+          this.prices = this.prices.filter((item) => {
+            return item.id !== monthlyPriceId;
+          });
+        });
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+  }
 }

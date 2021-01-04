@@ -9,9 +9,7 @@ import {
 } from 'react-native';
 import HeaderPlusIcon from '../../../components/HeaderPlusIcon';
 import axios from '../../../services/axios';
-import {AuthContext} from '../../../contexts/auth';
 import {ListItem} from 'react-native-elements';
-import {PriceContext} from '../../../contexts/price';
 import {showWarning} from '../../../components/toast';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -20,14 +18,7 @@ import {observer} from 'mobx-react-lite';
 import {StoreContext} from '../../../store/rootStore';
 
 const Prices = ({navigation}) => {
-  // const {companyId} = useContext(AuthContext);
   const {authStore, priceStore} = useContext(StoreContext);
-  // const {
-  //   populateFields,
-  //   setTypePrice,
-  //   setPrice,
-  //   deletePriceByUniqueId,
-  // } = useContext(PriceContext);
   const [prices, setPrices] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);

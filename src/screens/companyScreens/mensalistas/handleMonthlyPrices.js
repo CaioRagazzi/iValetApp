@@ -5,31 +5,31 @@ import OverlayLoading from '../../../components/overlayLoading';
 import {Icon} from 'native-base';
 import {HeaderBackButton} from '@react-navigation/stack';
 import SaveIcon from '../../../components/saveIcon';
-import axios from '../../../services/axios';
 import {StoreContext} from '../../../store/rootStore';
 import {showWarning} from '../../../components/toast';
 import {observer} from 'mobx-react-lite';
 
 const HandleMonthlyPrices = ({navigation, route}) => {
-  const {authStore, monthlyStore} = useContext(StoreContext);
+  const {monthlyStore} = useContext(StoreContext);
   const [loading, setLoading] = useState(false);
   const [edit, setEdit] = useState(false);
   const [monthlyPrice, setMonthlyPrice] = useState({
+    id: 0,
     name: '',
     price: '',
     description: '',
   });
 
   useEffect(() => {
-    const {price, description, name} = monthlyPrice;
-
     if (route.params) {
       setEdit(true);
       setMonthlyPrice(route.params.price);
     }
+  }, []);
 
+  useEffect(() => {
     navigation.setOptions({
-      title: `Tabela de Preço ${name}`,
+      title: `Tabela de Preço ${monthlyPrice.name}`,
       headerLeft: () => (
         <HeaderBackButton
           tintColor="#ffffff"
@@ -40,43 +40,31 @@ const HandleMonthlyPrices = ({navigation, route}) => {
       ),
       headerRight: () => <SaveIcon onPress={() => save()} />,
     });
+  }, [monthlyPrice]);
 
-    const save = async () => {
-      if (price === '' || !price || price === '' || !price) {
-        showWarning('Favor preencher todos os campos obrigatórios!');
-        return;
-      }
+  const save = async () => {
+    if (
+      monthlyPrice.price === '' ||
+      !monthlyPrice.price ||
+      monthlyPrice.price === '' ||
+      !monthlyPrice.price
+    ) {
+      showWarning('Favor preencher todos os campos obrigatórios!');
+      return;
+    }
 
-      setLoading(true);
-      if (edit) {
-        console.log('editando');
-      } else {
-        await axios
-          .post('MonthlyPrices', {
-            price: price,
-            companyId: authStore.companyId,
-            name: name,
-            description: description,
-          })
-          .then((res) => {
-            console.log(res.data);
-            monthlyStore.getPrices();
-            navigation.goBack();
-          })
-          .catch((err) => {
-            console.log(err.response.data);
-          });
-      }
-      setLoading(false);
-    };
-  }, [
-    navigation,
-    route,
-    edit,
-    authStore.companyId,
-    monthlyPrice,
-    monthlyStore,
-  ]);
+    setLoading(true);
+    if (edit) {
+      await monthlyStore.editMonthlyPrice(monthlyPrice).then((res) => {
+        navigation.goBack();
+      });
+    } else {
+      await monthlyStore.createMonthlyPrice(monthlyPrice).then((res) => {
+        navigation.goBack();
+      });
+    }
+    setLoading(false);
+  };
 
   return (
     <SafeAreaView>
