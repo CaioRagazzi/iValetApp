@@ -2,13 +2,14 @@ import React, {useEffect, useCallback, useState, useContext} from 'react';
 import {View, FlatList, StyleSheet} from 'react-native';
 import HeaderPlusIcon from '../../../components/HeaderPlusIcon';
 import axios from '../../../services/axios';
-import {AuthContext} from '../../../contexts/auth';
+import {StoreContext} from '../../../store/rootStore';
 import {showWarning} from '../../../components/toast';
 import {ListItem, Avatar} from 'react-native-elements';
 import {HeaderBackButton} from '@react-navigation/stack';
+import {observer} from 'mobx-react-lite';
 
-export default function ListMensalistas({navigation}) {
-  const {companyId} = useContext(AuthContext);
+const ListMensalistas = ({navigation}) => {
+  const {authStore} = useContext(StoreContext);
 
   const [loading, setLoading] = useState(false);
   const [mensalistas, setMensalistas] = useState();
@@ -30,13 +31,13 @@ export default function ListMensalistas({navigation}) {
     });
 
     getMensalistas();
-  }, [navigation, companyId, getMensalistas]);
+  }, [navigation, getMensalistas]);
 
   const getMensalistas = useCallback(async () => {
     setLoading(true);
     setMensalistas();
     await axios
-      .get(`monthlycustomer/${companyId}`)
+      .get(`monthlycustomer/${authStore.companyId}`)
       .then((res) => {
         setMensalistas(res.data);
         setLoading(false);
@@ -45,7 +46,7 @@ export default function ListMensalistas({navigation}) {
         showWarning('Erro buscando preços');
         setLoading(false);
       });
-  }, [companyId]);
+  }, [authStore.companyId]);
 
   const renderItem = ({item}) => {
     const customerName = item.customer.name.toUpperCase();
@@ -78,10 +79,12 @@ export default function ListMensalistas({navigation}) {
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   avatar: {
     backgroundColor: '#7c43bd',
   },
 });
+
+export default observer(ListMensalistas);

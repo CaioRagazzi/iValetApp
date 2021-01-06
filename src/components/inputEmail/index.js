@@ -41,7 +41,7 @@ export const InputEmail = (props) => {
   return (
     <Input
       placeholder={!props.placeholder ? 'Email' : props.placeholder}
-      leftIcon={<Icon name="email" size={24} />}
+      leftIcon={<Icon name="email" size={24} color="#4c4c4c" />}
       onChangeText={handleEmailChange}
       value={props.value}
       autoCapitalize="none"

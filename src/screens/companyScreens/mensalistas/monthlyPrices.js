@@ -63,7 +63,7 @@ const MonthlyPrices = ({navigation}) => {
           }>
           <ListItem.Content>
             <ListItem.Title>{item.name}</ListItem.Title>
-            <ListItem.Subtitle>{item.description}</ListItem.Subtitle>
+            <ListItem.Subtitle>$ {item.price}</ListItem.Subtitle>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>

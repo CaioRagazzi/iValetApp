@@ -11,6 +11,7 @@ import {showError, showSuccess} from '../../components/toast';
 function CadastroLogin(props) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [plate, setPlate] = useState('');
   const [company, setCompany] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -32,6 +33,7 @@ function CadastroLogin(props) {
       inputPasswordErr ||
       inputConfirmPasswordErr ||
       name.length <= 0 ||
+      plate.length <= 0 ||
       (company.length <= 0 && type === 'company')
     ) {
       return true;
@@ -42,10 +44,11 @@ function CadastroLogin(props) {
 
   const handleRegister = async () => {
     setLoading(true);
-    const userToInsert = {
+    const userCustomerToInsert = {
       name,
       password,
       email,
+      plate,
       perfil: 2,
     };
 
@@ -61,7 +64,10 @@ function CadastroLogin(props) {
       if (type === 'company') {
         await axios.post('usercompany/createUserCompany', userCompanyToInsert);
       } else {
-        await axios.post('/user', userToInsert);
+        await axios.post(
+          'usercustomer/createUserCustomer',
+          userCustomerToInsert,
+        );
       }
       showSuccess('Usuário criado com sucesso!');
       props.navigation.popToTop();
@@ -69,7 +75,7 @@ function CadastroLogin(props) {
     } catch (error) {
       console.log(error.response.data);
       setLoading(false);
-      if (error.response.data?.message.includes('Duplicate entry')) {
+      if (error.response.data?.message.includes('already exists')) {
         showError('E-mail já existe!');
       } else {
         showError('Erro ao criar login!');
@@ -81,7 +87,7 @@ function CadastroLogin(props) {
     <BaseLayout title="iValet - Cadastro">
       <Input
         placeholder="Nome"
-        leftIcon={<Icon name="person" size={24} color="black" />}
+        leftIcon={<Icon name="person" size={24} color="#4c4c4c" />}
         onChangeText={(text) => setName(text)}
         value={name}
         autoCapitalize="words"
@@ -94,10 +100,21 @@ function CadastroLogin(props) {
         value={email}
         hasErrors={(err) => setInputEmailErr(err)}
       />
+      <Input
+        placeholder="Placa do veículo"
+        leftIcon={
+          <Icon name="car" type="font-awesome" size={18} color="#4c4c4c" />
+        }
+        onChangeText={(text) => setPlate(text)}
+        value={plate}
+        autoCapitalize="none"
+        textContentType="name"
+        errorMessage={plate.length <= 0 ? 'Placa do veículo é obrigatório' : ''}
+      />
       {type === 'company' ? (
         <Input
           placeholder="Empresa"
-          leftIcon={<Icon name="business" size={24} color="black" />}
+          leftIcon={<Icon name="business" size={24} color="#4c4c4c" />}
           onChangeText={(text) => setCompany(text)}
           value={company}
           autoCapitalize="words"

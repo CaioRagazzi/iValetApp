@@ -18,9 +18,10 @@ import HandlePriceScreen from '../screens/companyScreens/price/handlePrice';
 import ListMensalistasScreen from '../screens/companyScreens/mensalistas/listMensalistas';
 import MensalistasScreen from '../screens/companyScreens/mensalistas';
 import AddMensalistasScreen from '../screens/companyScreens/mensalistas/addMensalista';
-import RegisterMensalistaScreen from '../screens/companyScreens/mensalistas/registerMensalista';
+import DetailsMensalistaScreen from '../screens/companyScreens/mensalistas/detailsMensalista';
 import MonthlyPricesScreen from '../screens/companyScreens/mensalistas/monthlyPrices';
 import HandleMonthlyPricesScreen from '../screens/companyScreens/mensalistas/handleMonthlyPrices';
+import RelationCustomerMonthlyScreen from '../screens/companyScreens/mensalistas/relationCustomerMontlhy';
 import {GatewayProvider} from '../contexts/gateway';
 import {PriceProvider} from '../contexts/price';
 import {CaixaProvider} from '../contexts/caixa';
@@ -52,13 +53,17 @@ function MensalistasStackNavigator() {
       <Stack.Screen name="ListMensalistas" component={ListMensalistasScreen} />
       <Stack.Screen name="AddMensalista" component={AddMensalistasScreen} />
       <Stack.Screen
-        name="RegisterMensalista"
-        component={RegisterMensalistaScreen}
+        name="DetailsMensalista"
+        component={DetailsMensalistaScreen}
       />
       <Stack.Screen name="MonthlyPrices" component={MonthlyPricesScreen} />
       <Stack.Screen
         name="HandleMonthlyPrices"
         component={HandleMonthlyPricesScreen}
+      />
+      <Stack.Screen
+        name="RelationCustomerMonthly"
+        component={RelationCustomerMonthlyScreen}
       />
     </Stack.Navigator>
   );
