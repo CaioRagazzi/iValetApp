@@ -94,12 +94,7 @@ const HandleMonthlyPrices = ({navigation, route}) => {
             value={monthlyPrice.price}
             placeholder="Digite o valor da tabela"
             leftIcon={
-              <Icon
-                type="MaterialIcons"
-                name="backup-table"
-                size={24}
-                color="black"
-              />
+              <Icon type="Feather" name="dollar-sign" size={24} color="black" />
             }
             onChangeText={(value) =>
               setMonthlyPrice({...monthlyPrice, price: value})
@@ -113,12 +108,7 @@ const HandleMonthlyPrices = ({navigation, route}) => {
             value={monthlyPrice.description}
             placeholder="Digite a descrição da tabela"
             leftIcon={
-              <Icon
-                type="MaterialIcons"
-                name="backup-table"
-                size={24}
-                color="black"
-              />
+              <Icon type="Feather" name="file-text" size={24} color="black" />
             }
             onChangeText={(value) =>
               setMonthlyPrice({...monthlyPrice, description: value})

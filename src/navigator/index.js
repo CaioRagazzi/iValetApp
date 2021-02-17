@@ -8,13 +8,13 @@ import SplashScreenNavigator from './splashNavigator';
 import {StoreContext} from '../store/rootStore';
 
 const Navigator = () => {
-  const rootContext = useContext(StoreContext);
+  const {authStore} = useContext(StoreContext);
 
   const getNavigator = () => {
-    if (rootContext.authStore.logged && rootContext.authStore.type === 1) {
+    if (authStore.logged && authStore.type === 1) {
       return <HomeCompanyNavigator />;
     }
-    if (rootContext.authStore.logged && rootContext.authStore.type === 2) {
+    if (authStore.logged && authStore.type === 2) {
       return <HomeClientNavigator />;
     }
     return <LoginNavigator />;
@@ -22,11 +22,7 @@ const Navigator = () => {
 
   return (
     <NavigationContainer>
-      {rootContext.authStore.splash ? (
-        <SplashScreenNavigator />
-      ) : (
-        getNavigator()
-      )}
+      {authStore.splash ? <SplashScreenNavigator /> : getNavigator()}
     </NavigationContainer>
   );
 };

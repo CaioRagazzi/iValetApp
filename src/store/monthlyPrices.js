@@ -19,6 +19,7 @@ export default class MonthlyPriceStore {
     await axios
       .get(`monthlyPrices/${this.authStore.companyId}`)
       .then((res) => {
+        console.log(res.data);
         runInAction(() => {
           this.prices = res.data;
         });

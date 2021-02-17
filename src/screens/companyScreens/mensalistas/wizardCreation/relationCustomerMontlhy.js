@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import {Card, Input, Button, Icon} from 'react-native-elements';
+import {View, StyleSheet} from 'react-native';
+import {Card, Input, Button, Icon, Text} from 'react-native-elements';
 import {HeaderBackButton} from '@react-navigation/stack';
 
 const RelationCustomerMontlhyScreen = ({route, navigation}) => {
@@ -30,7 +30,7 @@ const RelationCustomerMontlhyScreen = ({route, navigation}) => {
 
   return (
     <View style={styles.mainContainer}>
-      <Text style={styles.text}>
+      <Text h4 style={styles.text}>
         Localizamos o seguinte cliente com a placa informada:{' '}
       </Text>
       {customer !== undefined ? (
@@ -38,6 +38,7 @@ const RelationCustomerMontlhyScreen = ({route, navigation}) => {
           <Card.Title>Cliente</Card.Title>
           <Input
             leftIcon={<Icon name="person" size={24} color="#4c4c4c" />}
+            disabled
             value={customer.name}
             autoCapitalize="words"
           />
@@ -45,12 +46,15 @@ const RelationCustomerMontlhyScreen = ({route, navigation}) => {
             leftIcon={
               <Icon name="car" type="font-awesome" size={18} color="#4c4c4c" />
             }
+            disabled
             value={customer.placa}
             autoCapitalize="words"
           />
         </Card>
       ) : null}
-      <Text style={styles.text}>Deseja utilizá-lo? </Text>
+      <Text h4 style={styles.text}>
+        Deseja utilizá-lo?
+      </Text>
       <View style={styles.buttonContainer}>
         <Button
           title="Sim"

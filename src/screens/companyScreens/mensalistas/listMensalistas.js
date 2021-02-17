@@ -49,23 +49,44 @@ const ListMensalistas = ({navigation}) => {
   }, [authStore.companyId]);
 
   const renderItem = ({item}) => {
-    const customerName = item.customer.name.toUpperCase();
-    return (
-      <ListItem bottomDivider onPress={() => {}}>
-        <Avatar
-          rounded
-          title={customerName.substring(0, 2)}
-          containerStyle={styles.avatar}
-        />
-        <ListItem.Content>
-          <ListItem.Title>{customerName}</ListItem.Title>
-          <ListItem.Subtitle>
-            {item.customer.placa.toUpperCase()}
-          </ListItem.Subtitle>
-        </ListItem.Content>
-        <ListItem.Chevron />
-      </ListItem>
-    );
+    console.log(item);
+    if (item.customer) {
+      const customerName = item.customer.name.toUpperCase();
+      return (
+        <ListItem bottomDivider onPress={() => {}}>
+          <Avatar
+            rounded
+            title={customerName.substring(0, 2)}
+            containerStyle={styles.avatar}
+          />
+          <ListItem.Content>
+            <ListItem.Title>{customerName}</ListItem.Title>
+            <ListItem.Subtitle>
+              {item.customer.placa.toUpperCase()}
+            </ListItem.Subtitle>
+          </ListItem.Content>
+          <ListItem.Chevron />
+        </ListItem>
+      );
+    } else {
+      const customerName = item.nameAnonymousCustomer.toUpperCase();
+      return (
+        <ListItem bottomDivider onPress={() => {}}>
+          <Avatar
+            rounded
+            title={customerName.substring(0, 2)}
+            containerStyle={styles.avatar}
+          />
+          <ListItem.Content>
+            <ListItem.Title>{item.nameAnonymousCustomer}</ListItem.Title>
+            <ListItem.Subtitle>
+              {item.plateAnonymousCustomer.toUpperCase()}
+            </ListItem.Subtitle>
+          </ListItem.Content>
+          <ListItem.Chevron />
+        </ListItem>
+      );
+    }
   };
 
   return (

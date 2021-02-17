@@ -4,6 +4,7 @@ import AuthStore from './authStore';
 import CaixaStore from './caixaStore';
 import GatewayStore from './gatewayStore';
 import PriceStore from './priceStore';
+import MonthlyCustomerStore from './monthlyCustomer';
 
 class RootStore {
   constructor() {
@@ -12,6 +13,7 @@ class RootStore {
     this.gatewayStore = new GatewayStore(this);
     this.priceStore = new PriceStore(this);
     this.monthlyStore = new MonthlyPriceStore(this);
+    this.monthlyCustomerStore = new MonthlyCustomerStore(this);
   }
 }
 
