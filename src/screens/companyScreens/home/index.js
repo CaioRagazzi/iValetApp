@@ -1,10 +1,10 @@
 import React, {useEffect, useContext} from 'react';
 import {View, StyleSheet} from 'react-native';
-import FloatingActionButton from '../../components/floatingActionButton';
-import {StoreContext} from '../../store/rootStore';
-import OpenDrawerIcon from '../../components/openDrawerIcon';
-import {stylesDefault} from '../../styles/defaultStyles';
-import {showWarning} from '../../components/toast';
+import FloatingActionButton from '../../../components/floatingActionButton';
+import {StoreContext} from '../../../store/rootStore';
+import OpenDrawerIcon from '../../../components/openDrawerIcon';
+import {stylesDefault} from '../../../styles/defaultStyles';
+import {showWarning} from '../../../components/toast';
 import {observer} from 'mobx-react-lite';
 
 const HomeScreen = ({navigation}) => {
@@ -12,7 +12,7 @@ const HomeScreen = ({navigation}) => {
 
   useEffect(() => {
     caixaStore.getOpenedCaixa();
-  }, []);
+  }, [caixaStore]);
 
   useEffect(() => {
     navigation.setOptions({

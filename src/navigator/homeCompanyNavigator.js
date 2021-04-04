@@ -10,7 +10,7 @@ import CustomDrawerContent from './customDrawer';
 import HomeCompanyScreen from '../screens/companyScreens/home';
 import FormCarEntryScreen from '../screens/companyScreens/formCarEntry';
 import EntryScreen from '../screens/companyScreens/entry';
-import CarDetailsScreen from '../screens/companyScreens/carDetails';
+import CarDetailsScreen from '../screens/companyScreens/entry/carDetails';
 import FinishedScreen from '../screens/companyScreens/finished';
 import PricesScreen from '../screens/companyScreens/price/prices';
 import CaixaScreen from '../screens/companyScreens/caixa';

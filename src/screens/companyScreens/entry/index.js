@@ -1,9 +1,9 @@
 import React, {useContext, useEffect} from 'react';
 import {View, FlatList} from 'react-native';
-import {StoreContext} from '../../store/rootStore';
-import CardCar from '../../components/cardCar';
-import OpenDrawerIcon from '../../components/openDrawerIcon';
-import {stylesDefault} from '../../styles/defaultStyles';
+import {StoreContext} from '../../../store/rootStore';
+import CardCar from '../../../components/cardCar';
+import OpenDrawerIcon from '../../../components/openDrawerIcon';
+import {stylesDefault} from '../../../styles/defaultStyles';
 import {observer} from 'mobx-react-lite';
 
 const Entry = ({navigation}) => {

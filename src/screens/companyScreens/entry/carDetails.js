@@ -1,18 +1,16 @@
 import React, {useEffect, useContext, useState} from 'react';
 import {Text, StyleSheet, SafeAreaView, ActivityIndicator} from 'react-native';
 import {Card} from 'react-native-elements';
-import axios from '../../services/axios';
-import FloatingActionButton from '../../components/floatingActionButton';
+import axios from '../../../services/axios';
+import FloatingActionButton from '../../../components/floatingActionButton';
 import {format, subHours, differenceInMinutes, parseISO} from 'date-fns';
-import {AuthContext} from '../../contexts/auth';
-import {showWarning} from '../../components/toast';
-import OverlayLoading from '../../components/overlayLoading';
+import {showWarning} from '../../../components/toast';
+import OverlayLoading from '../../../components/overlayLoading';
 import {observer} from 'mobx-react-lite';
-import {StoreContext} from '../../store/rootStore';
+import {StoreContext} from '../../../store/rootStore';
 
 const CarDetails = ({route, navigation}) => {
   const {transactionParam} = route.params;
-  // const {companyId} = useContext(AuthContext);
   const {authStore} = useContext(StoreContext);
   const [price, setPrice] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -88,6 +86,11 @@ const CarDetails = ({route, navigation}) => {
   ]);
 
   const handleBaixaVeiculo = async () => {
+    if (price === 0) {
+      showWarning('Nenhuma tabela de preço configurada para o dia de hoje!');
+      setLoading(false);
+      return;
+    }
     setLoadingPage(true);
     console.log(transactionParam);
     await axios

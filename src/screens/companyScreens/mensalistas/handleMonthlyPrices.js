@@ -11,7 +11,7 @@ import {observer} from 'mobx-react-lite';
 
 const HandleMonthlyPrices = ({navigation, route}) => {
   const {monthlyStore} = useContext(StoreContext);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [edit, setEdit] = useState(false);
   const [monthlyPrice, setMonthlyPrice] = useState({
     id: 0,
@@ -24,8 +24,9 @@ const HandleMonthlyPrices = ({navigation, route}) => {
     if (route.params) {
       setEdit(true);
       setMonthlyPrice(route.params.price);
+      setLoading(false);
     }
-  }, []);
+  }, [route.params]);
 
   useEffect(() => {
     navigation.setOptions({

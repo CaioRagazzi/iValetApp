@@ -1,9 +1,9 @@
 import React, {useContext, useEffect} from 'react';
 import {View, FlatList} from 'react-native';
-import {GatewayContext} from '../../contexts/gateway';
-import {StoreContext} from '../../store/rootStore';
-import CardCar from '../../components/cardCar';
-import OpenDrawerIcon from '../../components/openDrawerIcon';
+import {GatewayContext} from '../../../contexts/gateway';
+import {StoreContext} from '../../../store/rootStore';
+import CardCar from '../../../components/cardCar';
+import OpenDrawerIcon from '../../../components/openDrawerIcon';
 import {observer} from 'mobx-react-lite';
 
 const Finished = ({navigation}) => {
