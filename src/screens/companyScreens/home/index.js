@@ -8,7 +8,11 @@ import {showWarning} from '../../../components/toast';
 import {observer} from 'mobx-react-lite';
 
 const HomeScreen = ({navigation}) => {
-  const {caixaStore} = useContext(StoreContext);
+  const {caixaStore, gatewayStore} = useContext(StoreContext);
+
+  useEffect(() => {
+    gatewayStore.init();
+  }, [gatewayStore]);
 
   useEffect(() => {
     caixaStore.getOpenedCaixa();

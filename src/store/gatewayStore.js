@@ -27,7 +27,7 @@ export default class GatewayStore {
   }
 
   init() {
-    const socket = socketIo.connect('http://192.168.0.6:8085/', {
+    const socket = socketIo.connect('http://192.168.0.4:8085/', {
       query: {token: this.authStore.token},
     });
     this.io = socket;
@@ -79,7 +79,6 @@ export default class GatewayStore {
     axios
       .get(`transaction/opened/${this.authStore.companyId}`)
       .then((res) => {
-        console.log(res.data);
         this.addOpenedTransactions(res.data);
         runInAction(() => {
           this.loading = false;
@@ -93,8 +92,6 @@ export default class GatewayStore {
   }
 
   getFinishedCars() {
-    console.log('oi');
-    console.log(this.authStore.companyId);
     axios
       .get(`transaction/finished/${this.authStore.companyId}`)
       .then((res) => {

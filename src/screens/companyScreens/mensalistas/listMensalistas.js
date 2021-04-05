@@ -49,7 +49,6 @@ const ListMensalistas = ({navigation}) => {
   }, [authStore.companyId]);
 
   const renderItem = ({item}) => {
-    console.log(item);
     if (item.customer) {
       const customerName = item.customer.name.toUpperCase();
       return (

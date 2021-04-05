@@ -1,6 +1,5 @@
 import React, {useContext} from 'react';
 import {View, Text, StyleSheet, Switch} from 'react-native';
-import {PriceContext} from '../../../contexts/price';
 import CheckBox from '@react-native-community/checkbox';
 import InputTimeDynamic from './inputTimeDynamic';
 import ButtonAddNewInputDynamic from './buttonAddNewInputDynamic';

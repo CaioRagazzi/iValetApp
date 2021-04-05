@@ -50,7 +50,6 @@ const AddMensalista = ({navigation}) => {
       var monthlyCustomerResponse = await axios.get(
         `MonthlyCustomer/company/${authStore.companyId}/monthlyCustomer/${monthlyCustomerStore.placa}`,
       );
-      console.log(monthlyCustomerResponse.data.length);
       if (monthlyCustomerResponse.data.length > 0) {
         showWarning('Cliente já é mensalista!');
         setLoading(false);
@@ -69,7 +68,6 @@ const AddMensalista = ({navigation}) => {
       }
       setLoading(false);
     } catch (error) {
-      console.log(error);
       setLoading(false);
     }
   };

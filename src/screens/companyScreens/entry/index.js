@@ -9,7 +9,6 @@ import {observer} from 'mobx-react-lite';
 const Entry = ({navigation}) => {
   const {gatewayStore} = useContext(StoreContext);
   useEffect(() => {
-    gatewayStore.init();
     gatewayStore.getOpenedCars();
   }, []);
 

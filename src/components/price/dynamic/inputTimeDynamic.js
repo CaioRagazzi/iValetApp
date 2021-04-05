@@ -14,7 +14,6 @@ const InputTimeDynamic = () => {
   };
 
   const setStartInputValue = (item, value) => {
-    console.log([...priceStore.quantityDynamic]);
     const newArray = JSON.parse(JSON.stringify(priceStore.quantityDynamic));
     newArray.forEach((element) => {
       if (element.id === item.id) {

@@ -24,9 +24,6 @@ import HandleMonthlyPricesScreen from '../screens/companyScreens/mensalistas/han
 import RelationCustomerMonthlyScreen from '../screens/companyScreens/mensalistas/wizardCreation/relationCustomerMontlhy';
 import SelectPriceScreen from '../screens/companyScreens/mensalistas/wizardCreation/selectPrice';
 import SummaryCustomerMonthlyScreen from '../screens/companyScreens/mensalistas/wizardCreation/summaryCustomerMonthly';
-import {GatewayProvider} from '../contexts/gateway';
-import {PriceProvider} from '../contexts/price';
-import {CaixaProvider} from '../contexts/caixa';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();

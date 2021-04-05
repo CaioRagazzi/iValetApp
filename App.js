@@ -2,7 +2,6 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import {StatusBar} from 'react-native';
 import Navigator from './src/navigator/index';
-import AuthProvider from './src/contexts/auth';
 import {StoreContext, rootStore} from './src/store/rootStore';
 import {ThemeProvider} from 'react-native-elements';
 import {Root} from 'native-base';

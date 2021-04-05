@@ -286,7 +286,6 @@ export default class PriceStore {
   }
 
   async createFixedPrice(weekDays) {
-    console.log(weekDays);
     let uniqueIdPrice = format(new Date(), 'HHmmssSSS');
     let created = false;
     runInAction(() => {
@@ -410,7 +409,6 @@ export default class PriceStore {
             created = true;
           })
           .catch((err) => {
-            console.log(err.response.data);
             if (
               err.response.data.message === 'Same day has already been added!'
             ) {

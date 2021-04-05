@@ -2,7 +2,6 @@ import {observer} from 'mobx-react-lite';
 import React, {useContext, useEffect} from 'react';
 import {TouchableOpacity, SafeAreaView, StyleSheet} from 'react-native';
 import {Text as TextEl} from 'react-native-elements';
-import {PriceContext} from '../../contexts/price';
 import {StoreContext} from '../../store/rootStore';
 
 const DateButtonsCalendar = (props) => {

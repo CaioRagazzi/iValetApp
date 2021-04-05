@@ -1,6 +1,5 @@
 import React, {useContext} from 'react';
 import {StyleSheet} from 'react-native';
-import {PriceContext} from '../../../contexts/price';
 import {Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {StoreContext} from '../../../store/rootStore';

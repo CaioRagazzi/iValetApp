@@ -68,7 +68,7 @@ const HandleMonthlyPrices = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.mainContainer}>
       <ScrollView>
         <Card containerStyle={styles.cardContainer}>
           <Card.Title>Nome*</Card.Title>
@@ -123,9 +123,14 @@ const HandleMonthlyPrices = ({navigation, route}) => {
 };
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    marginHorizontal: 10,
+  },
   cardContainer: {
     borderRadius: 20,
     elevation: 5,
+    marginBottom: 10,
   },
 });
 

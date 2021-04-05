@@ -7,7 +7,6 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Input} from 'react-native-elements';
-import {PriceContext} from '../../../contexts/price';
 import {showWarning} from '../../toast';
 import Orientation from 'react-native-orientation';
 import {StoreContext} from '../../../store/rootStore';

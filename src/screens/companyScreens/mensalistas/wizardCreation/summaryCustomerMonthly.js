@@ -41,9 +41,7 @@ const SummaryCustomerMonthlyScreen = ({navigation}) => {
         setLoadingPage(false);
         monthlyCustomerStore.resetFields;
       })
-      .catch((err) => {
-        console.log(err.response.data);
-      });
+      .catch((err) => {});
   };
 
   return (

@@ -8,7 +8,9 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Alert,
+  FlatList,
 } from 'react-native';
+import {ListItem} from 'react-native-elements';
 import OpenDrawerIcon from '../../../components/openDrawerIcon';
 import {Card} from 'react-native-elements';
 import IconFontisto from 'react-native-vector-icons/Fontisto';
@@ -20,6 +22,8 @@ import {observer} from 'mobx-react-lite';
 
 const CaixaScreen = ({navigation}) => {
   const {authStore, caixaStore} = useContext(StoreContext);
+  const [closedCaixas, setClosedCaixas] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [orientation, setOrientation] = useState(
     Orientation.getInitialOrientation(),
@@ -38,11 +42,24 @@ const CaixaScreen = ({navigation}) => {
     });
 
     Orientation.addOrientationListener(setOrientation);
+    getClosedCaixas();
 
     return () => {
       Orientation.removeOrientationListener(setOrientation);
     };
   }, [navigation]);
+
+  const getClosedCaixas = () => {
+    axios
+      .get(`caixa/closedCaixa/${authStore.companyId}`, {
+        params: {
+          page: 0,
+        },
+      })
+      .then((res) => {
+        setClosedCaixas(res.data);
+      });
+  };
 
   const getTitleCaixa = () => {
     if (caixaStore.loading) {
@@ -84,36 +101,56 @@ const CaixaScreen = ({navigation}) => {
   const checkIfTheresCarInAndOpenCloseCaixa = async () => {
     if (caixaStore.isCaixaOpened) {
       caixaStore.setLoading(true);
-      axios.get(`transaction/opened/${authStore.companyId}`).then((res) => {
-        console.log(res.data);
-        if (res.data.length === 0) {
-          caixaStore.openCloseCaixa();
-        } else {
-          Alert.alert(
-            'Atenção',
-            'Ainda existem carros estacionados, tem certeza que deseja fechar o caixa?',
-            [
-              {
-                text: 'Cancelar',
-                onPress: () => {
-                  caixaStore.setLoading(false);
+      axios
+        .get(`transaction/opened/${authStore.companyId}`)
+        .then(async (res) => {
+          if (res.data.length === 0) {
+            await caixaStore.openCloseCaixa();
+            getClosedCaixas();
+          } else {
+            Alert.alert(
+              'Atenção',
+              'Ainda existem carros estacionados, tem certeza que deseja fechar o caixa?',
+              [
+                {
+                  text: 'Cancelar',
+                  onPress: () => {
+                    caixaStore.setLoading(false);
+                  },
+                  style: 'cancel',
                 },
-                style: 'cancel',
-              },
-              {text: 'Sim', onPress: () => caixaStore.openCloseCaixa()},
-            ],
-            {cancelable: false},
-          );
-        }
-      });
+                {
+                  text: 'Sim',
+                  onPress: async () => {
+                    await caixaStore.openCloseCaixa();
+                    getClosedCaixas();
+                  },
+                },
+              ],
+              {cancelable: false},
+            );
+          }
+        });
     } else {
-      caixaStore.openCloseCaixa();
+      await caixaStore.openCloseCaixa();
+      getClosedCaixas();
     }
   };
 
+  const renderItem = ({item}) => {
+    return (
+      <ListItem bottomDivider>
+        <ListItem.Content>
+          <ListItem.Title>{item.openDate}</ListItem.Title>
+        </ListItem.Content>
+        <ListItem.Chevron />
+      </ListItem>
+    );
+  };
+
   return (
-    <SafeAreaView style={{flexGrow: 1}}>
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+    <SafeAreaView>
+      <ScrollView contentContainerStyle={{flexGrow: 1, height: '30%'}}>
         <Card
           containerStyle={
             orientation === 'PORTRAIT' ? styles.card : styles.cardLandscape
@@ -127,6 +164,14 @@ const CaixaScreen = ({navigation}) => {
           </TouchableOpacity>
         </Card>
       </ScrollView>
+      <View style={{paddingTop: 10, height: '68%'}}>
+        <FlatList
+          data={closedCaixas}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          refreshing={loading}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -139,7 +184,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: '35%',
-    height: '25%',
+    height: '100%',
     borderRadius: 10,
     padding: 0,
     backgroundColor: '#7c42bd',

@@ -2,7 +2,6 @@ import React, {useState, useContext, useEffect} from 'react';
 import {SafeAreaView, ScrollView, StyleSheet, Keyboard} from 'react-native';
 import {Input, Card} from 'react-native-elements';
 import axios from '../../services/axios';
-import {AuthContext} from '../../contexts/auth';
 import {StoreContext} from '../../store/rootStore';
 import {Icon} from 'native-base';
 import {showError} from '../../components/toast';
@@ -38,7 +37,6 @@ export default function FormCarEntryScreen({navigation}) {
           navigation.navigate('Entrada');
         })
         .catch((err) => {
-          console.log(err.response.data);
           if (err.response.data.message === 'Cars already in') {
             showError('Carro já se encontra no estacionamento!');
           }

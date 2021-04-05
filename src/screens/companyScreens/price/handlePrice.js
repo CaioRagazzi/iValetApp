@@ -10,7 +10,6 @@ import {
 import {Divider} from 'react-native-elements';
 import DateButtonsCalendar from '../../../components/dateButtonsCalendar';
 import SaveIcon from '../../../components/saveIcon';
-import {PriceContext} from '../../../contexts/price';
 import {showWarning} from '../../../components/toast';
 import {HeaderBackButton} from '@react-navigation/stack';
 import FixedContainer from '../../../components/price/fixed/fixedContainer';

@@ -1,7 +1,6 @@
 import React, {useContext} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Input} from 'react-native-elements';
-import {PriceContext} from '../../../contexts/price';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {StoreContext} from '../../../store/rootStore';
 import {observer} from 'mobx-react-lite';

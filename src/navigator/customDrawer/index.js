@@ -1,10 +1,6 @@
 import React, {useContext, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
+import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 import {StoreContext} from '../../store/rootStore';
 
 export default function CustomDrawerContent(props) {
@@ -21,7 +17,6 @@ export default function CustomDrawerContent(props) {
       {...props}
       contentContainerStyle={styles.drawerContent}>
       <View style={styles.topContainer} />
-      {/* <DrawerItemList {...props} activeTintColor="#7c43bd" /> */}
       <DrawerItem
         label="Início"
         activeTintColor="#7c43bd"

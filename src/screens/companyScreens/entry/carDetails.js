@@ -74,10 +74,7 @@ const CarDetails = ({route, navigation}) => {
         }
         setLoading(false);
       })
-      .catch((err) => {
-        console.log(err.response);
-        console.log(err);
-      });
+      .catch((err) => {});
   }, [
     navigation,
     transactionParam.placa,
@@ -92,7 +89,6 @@ const CarDetails = ({route, navigation}) => {
       return;
     }
     setLoadingPage(true);
-    console.log(transactionParam);
     await axios
       .put('transaction/finish', null, {
         params: {
@@ -103,9 +99,7 @@ const CarDetails = ({route, navigation}) => {
         navigation.popToTop();
         navigation.navigate('Saida');
       })
-      .catch((err) => {
-        console.log('oierr', err.response.data);
-      });
+      .catch((err) => {});
     setLoadingPage(false);
   };
 
